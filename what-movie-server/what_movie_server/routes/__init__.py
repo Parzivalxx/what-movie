@@ -1,10 +1,10 @@
 from flask import Blueprint
 
-# Create a blueprint for the data routes
-data_routes = Blueprint("data", __name__)
+# Create a blueprint for the auth routes
+auth_blueprint = Blueprint("auth", __name__)
 
 # Import the routes to be registered
-from .data import *
+from what_movie_server.routes.auth import *
 
 # Optionally, you can define any common behavior or middleware for the data routes here
 # For example, you can define a before_request function that will be executed before each request
