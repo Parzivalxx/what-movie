@@ -9,6 +9,9 @@ def register_cli_commands(app, db):
     def test():
         """Runs the unit tests without test coverage."""
         tests = unittest.TestLoader().discover("../tests", pattern="test*.py")
+        # tests = unittest.TestLoader().loadTestsFromName(
+        #     "tests.test_movies.TestMoviesBlueprint.test_movies_nowshowing_valid_n"
+        # )
         result = unittest.TextTestRunner(verbosity=2).run(tests)
         if result.wasSuccessful():
             return 0

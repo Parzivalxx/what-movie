@@ -2,7 +2,7 @@ import time
 import json
 
 from what_movie_server.app import db
-from what_movie_server.models.User import User, BlacklistToken
+from what_movie_server.models import User, BlacklistToken
 from tests.base import BaseTestCase
 
 

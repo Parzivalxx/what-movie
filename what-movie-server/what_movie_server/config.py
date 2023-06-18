@@ -9,9 +9,12 @@ class BaseConfig:
     """Base configuration."""
 
     SECRET_KEY = os.getenv("SECRET_KEY", "my_precious")
+    API_KEY = os.getenv("API_KEY", "")
     DEBUG = False
     BCRYPT_LOG_ROUNDS = 13
+    REQUEST_RETRIES = 3
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    BASE_MOVIEGLU_URL = "https://api-gate2.movieglu.com/"
 
 
 class DevelopmentConfig(BaseConfig):

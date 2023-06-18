@@ -1,5 +1,5 @@
 from what_movie_server.app import db
-from what_movie_server.models.User import User
+from what_movie_server.models import User
 from tests.base import BaseTestCase
 
 

@@ -17,11 +17,13 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from what_movie_server.routes.auth import auth_blueprint
+from what_movie_server.routes.movies import movies_blueprint
 from what_movie_server.commands import register_cli_commands
 
 register_cli_commands(app, db)
 
 app.register_blueprint(auth_blueprint)
+app.register_blueprint(movies_blueprint)
 
 if __name__ == "__main__":
     app.run()
