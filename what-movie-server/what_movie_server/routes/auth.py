@@ -31,6 +31,7 @@ def register():
             }
             return make_response(jsonify(response_object)), 201
         except Exception as e:
+            app.logger.error(e)
             response_object = {
                 "status": "fail",
                 "message": "Some error occurred. Please try again.",

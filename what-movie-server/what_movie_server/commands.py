@@ -1,7 +1,6 @@
 import os
 import unittest
 import coverage
-from flask.cli import AppGroup
 
 
 def register_cli_commands(app, db):

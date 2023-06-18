@@ -1,7 +1,7 @@
 import jwt
 import datetime
 
-from what_movie_server.models.BlacklistToken import BlacklistToken
+from what_movie_server.models.sqlalchemy.BlacklistToken import BlacklistToken
 from what_movie_server.app import app, db, bcrypt
 
 
@@ -15,6 +15,8 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+
+    # favourites = db.relationship("Favourites", backref="user")
 
     def __init__(self, email, password, admin=False):
         self.email = email
