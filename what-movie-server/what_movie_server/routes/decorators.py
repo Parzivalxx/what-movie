@@ -1,5 +1,4 @@
 from functools import wraps
-from flask import request
 from datetime import datetime
 
 from what_movie_server.app import app

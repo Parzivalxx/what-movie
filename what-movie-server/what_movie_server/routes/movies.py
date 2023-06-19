@@ -4,7 +4,11 @@ import requests
 
 from what_movie_server.routes import movies_blueprint
 from what_movie_server.routes.decorators import add_request_headers
-from what_movie_server.models import MoviesGetRequest, ShowtimesGetRequest
+from what_movie_server.models import (
+    NowshowingGetRequest,
+    ComingsoonGetRequest,
+    ShowtimesGetRequest,
+)
 from what_movie_server.app import app
 
 
@@ -47,7 +51,7 @@ def get_movies_now_showing(headers=None):
     """
     Retrieve the currently showing movies
     """
-    request_data = MoviesGetRequest(n=int(request.args.get("n")))
+    request_data = NowshowingGetRequest(n=int(request.args.get("n")))
     return get_request(
         request_data=request_data, route_name="filmsNowShowing", headers=headers
     )
@@ -59,7 +63,7 @@ def get_movies_coming_soon(headers=None):
     """
     Retrieve the movies coming soon
     """
-    request_data = MoviesGetRequest(n=int(request.args.get("n")))
+    request_data = ComingsoonGetRequest(n=int(request.args.get("n")))
     return get_request(
         request_data=request_data, route_name="filmsComingSoon", headers=headers
     )
