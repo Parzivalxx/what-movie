@@ -6,7 +6,7 @@ from what_movie_server.app import db
 
 
 @favourites_blueprint.route("/favourites", methods=["POST"])
-def add_favourite():
+def create_favourite():
     """
     Add favourite resource
     """

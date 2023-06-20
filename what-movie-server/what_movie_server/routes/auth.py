@@ -1,7 +1,19 @@
-from flask import request, make_response, jsonify
+from flask import request, make_response
 
 from what_movie_server.app import app, bcrypt, db
-from what_movie_server.models import User, BlacklistToken
+from what_movie_server.models import (
+    User,
+    BlacklistToken,
+    ErrorResponse,
+    RegisterPostRequest,
+    RegisterSuccessPostResponse,
+    LoginPostRequest,
+    LoginSuccessPostResponse,
+    GetstatusGetHeaders,
+    GetstatusSuccessGetResponse,
+    LogoutPostHeaders,
+    LogoutSuccessPostResponse,
+)
 from what_movie_server.routes import auth_blueprint
 
 
@@ -11,7 +23,7 @@ def register():
     User Registration Resource
     """
     # get the post data
-    post_data = request.get_json()
+    post_data = RegisterPostRequest.parse_obj(request.get_json()).dict()
     # check if user already exists
     user = User.query.filter_by(email=post_data.get("email")).first()
     if not user:
@@ -29,20 +41,31 @@ def register():
                 "message": "Successfully registered.",
                 "auth_token": auth_token,
             }
-            return make_response(jsonify(response_object)), 201
+            return (
+                make_response(
+                    RegisterSuccessPostResponse.parse_obj(response_object).dict()
+                ),
+                201,
+            )
         except Exception as e:
             app.logger.error(e)
             response_object = {
                 "status": "fail",
                 "message": "Some error occurred. Please try again.",
             }
-            return make_response(jsonify(response_object)), 401
+            return (
+                make_response(ErrorResponse.parse_obj(response_object).dict()),
+                401,
+            )
     else:
         response_object = {
             "status": "fail",
             "message": "User already exists. Please Log in.",
         }
-        return make_response(jsonify(response_object)), 202
+        return (
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
+            202,
+        )
 
 
 @auth_blueprint.route("/auth/login", methods=["POST"])
@@ -51,7 +74,7 @@ def login():
     User Login Resource
     """
     # get the post data
-    post_data = request.get_json()
+    post_data = LoginPostRequest.parse_obj(request.get_json()).dict()
     try:
         # fetch the user data
         user = User.query.filter_by(email=post_data.get("email")).first()
@@ -65,14 +88,25 @@ def login():
                     "message": "Successfully logged in.",
                     "auth_token": auth_token,
                 }
-                return make_response(jsonify(response_object)), 200
+                return (
+                    make_response(
+                        LoginSuccessPostResponse.parse_obj(response_object).dict()
+                    ),
+                    200,
+                )
         else:
             response_object = {"status": "fail", "message": "User does not exist."}
-            return make_response(jsonify(response_object)), 404
+            return (
+                make_response(ErrorResponse.parse_obj(response_object).dict()),
+                404,
+            )
     except Exception as e:
         app.logger.error(e)
         response_object = {"status": "fail", "message": "Try again"}
-        return make_response(jsonify(response_object)), 500
+        return (
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
+            500,
+        )
 
 
 @auth_blueprint.route("/auth/status", methods=["GET"])
@@ -81,7 +115,7 @@ def get_status():
     User Resource
     """
     # get the auth token
-    auth_header = request.headers.get("Authorization")
+    auth_header = GetstatusGetHeaders(**request.headers).Authorization
     if auth_header:
         try:
             auth_token = auth_header.split(" ")[1]
@@ -90,7 +124,10 @@ def get_status():
                 "status": "fail",
                 "message": "Bearer token malformed.",
             }
-            return make_response(jsonify(response_object)), 401
+            return (
+                make_response(ErrorResponse.parse_obj(response_object).dict()),
+                401,
+            )
     else:
         auth_token = ""
     if auth_token:
@@ -106,15 +143,26 @@ def get_status():
                     "registered_on": user.registered_on,
                 },
             }
-            return make_response(jsonify(response_object)), 200
+            return (
+                make_response(
+                    GetstatusSuccessGetResponse.parse_obj(response_object).dict()
+                ),
+                200,
+            )
         response_object = {"status": "fail", "message": resp}
-        return make_response(jsonify(response_object)), 401
+        return (
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
+            401,
+        )
     else:
         response_object = {
             "status": "fail",
             "message": "Provide a valid auth token.",
         }
-        return make_response(jsonify(response_object)), 401
+        return (
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
+            401,
+        )
 
 
 @auth_blueprint.route("/auth/logout", methods=["POST"])
@@ -123,7 +171,7 @@ def logout():
     Logout Resource
     """
     # get auth token
-    auth_header = request.headers.get("Authorization")
+    auth_header = LogoutPostHeaders(**request.headers).Authorization
     if auth_header:
         auth_token = auth_header.split(" ")[1]
     else:
@@ -141,16 +189,30 @@ def logout():
                     "status": "success",
                     "message": "Successfully logged out.",
                 }
-                return make_response(jsonify(response_object)), 200
+                return (
+                    make_response(
+                        LogoutSuccessPostResponse.parse_obj(response_object).dict()
+                    ),
+                    200,
+                )
             except Exception as e:
                 response_object = {"status": "fail", "message": e}
-                return make_response(jsonify(response_object)), 200
+                return (
+                    make_response(ErrorResponse.parse_obj(response_object).dict()),
+                    200,
+                )
         else:
             response_object = {"status": "fail", "message": resp}
-            return make_response(jsonify(response_object)), 401
+            return (
+                make_response(ErrorResponse.parse_obj(response_object).dict()),
+                401,
+            )
     else:
         response_object = {
             "status": "fail",
             "message": "Provide a valid auth token.",
         }
-        return make_response(jsonify(response_object)), 403
+        return (
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
+            403,
+        )

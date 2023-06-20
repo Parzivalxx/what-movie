@@ -17,6 +17,23 @@ from .pydantic.movies.showtimes.request.ShowtimesGetRequest import ShowtimesGetR
 from .pydantic.movies.showtimes.response.ShowtimesGetResponse import (
     ShowtimesGetResponse,
 )
+from .pydantic.auth.error.response.ErrorResponse import ErrorResponse
+from .pydantic.auth.register.request.RegisterPostRequest import RegisterPostRequest
+from .pydantic.auth.register.response.RegisterSuccessPostResponse import (
+    RegisterSuccessPostResponse,
+)
+from .pydantic.auth.login.request.LoginPostRequest import LoginPostRequest
+from .pydantic.auth.login.response.LoginSuccessPostResponse import (
+    LoginSuccessPostResponse,
+)
+from .pydantic.auth.getstatus.request.GetstatusGetHeaders import GetstatusGetHeaders
+from .pydantic.auth.getstatus.response.GetstatusSuccessGetResponse import (
+    GetstatusSuccessGetResponse,
+)
+from .pydantic.auth.logout.request.LogoutPostHeaders import LogoutPostHeaders
+from .pydantic.auth.logout.response.LogoutSuccessPostResponse import (
+    LogoutSuccessPostResponse,
+)
 
 
 __all__ = [
@@ -29,4 +46,13 @@ __all__ = [
     "NowshowingGetResponse",
     "ShowtimesGetRequest",
     "ShowtimesGetResponse",
+    "ErrorResponse",
+    "RegisterPostRequest",
+    "RegisterSuccessPostResponse",
+    "LoginPostRequest",
+    "LoginSuccessPostResponse",
+    "GetstatusSuccessGetResponse",
+    "LogoutSuccessPostResponse",
+    "GetstatusGetHeaders",
+    "LogoutPostHeaders",
 ]

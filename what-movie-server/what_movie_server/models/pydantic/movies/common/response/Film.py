@@ -11,9 +11,9 @@ class Film(BaseModel):
     imdb_id: int
     imdb_title_id: str
     film_name: str
-    other_titles: Dict[str, str]
+    other_titles: Optional[Dict[str, str]]
     release_dates: List[ReleaseDate]
     age_rating: List[AgeRating]
-    film_trailer: HttpUrl
+    film_trailer: Optional[HttpUrl]
     synopsis_long: str
     images: Optional[Images]
