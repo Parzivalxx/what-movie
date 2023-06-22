@@ -3,7 +3,7 @@ import json
 
 from what_movie_server.app import db
 from what_movie_server.models import User, BlacklistToken
-from tests.base import BaseTestCase
+from tests.integration.base import BaseTestCase
 
 
 def register_user(self, email, password):

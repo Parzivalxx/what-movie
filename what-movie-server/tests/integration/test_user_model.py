@@ -1,6 +1,6 @@
 from what_movie_server.app import db
 from what_movie_server.models import User
-from tests.base import BaseTestCase
+from tests.integration.base import BaseTestCase
 
 
 class TestUserModel(BaseTestCase):

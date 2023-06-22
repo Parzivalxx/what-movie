@@ -1,7 +1,7 @@
 import json
 
 from what_movie_server.app import app
-from tests.base import BaseTestCase
+from tests.integration.base import BaseTestCase
 
 
 REQUEST_RETRIES = app.config["REQUEST_RETRIES"]

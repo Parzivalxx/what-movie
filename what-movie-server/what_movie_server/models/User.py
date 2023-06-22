@@ -1,7 +1,7 @@
 import jwt
 import datetime
 
-from what_movie_server.models.sqlalchemy.BlacklistToken import BlacklistToken
+from what_movie_server.models.BlacklistToken import BlacklistToken
 from what_movie_server.app import app, db, bcrypt
 
 

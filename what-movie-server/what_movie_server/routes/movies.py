@@ -1,17 +1,19 @@
-from flask import make_response, jsonify, request
+from flask import make_response, request
+from flask_pydantic import validate
 from http import HTTPStatus
 import requests
 
-from what_movie_server.routes import movies_blueprint
-from what_movie_server.routes.decorators import add_request_headers
-from what_movie_server.models import (
-    NowshowingGetRequest,
-    NowshowingGetResponse,
+from what_movie_server.schemas import (
     ComingsoonGetRequest,
     ComingsoonGetResponse,
+    MoviesErrorResponse,
+    NowshowingGetRequest,
+    NowshowingGetResponse,
     ShowtimesGetRequest,
     ShowtimesGetResponse,
 )
+from what_movie_server.routes import movies_blueprint
+from what_movie_server.routes.decorators import add_request_headers
 from what_movie_server.app import app
 
 
@@ -19,14 +21,13 @@ BASE_MOVIEGLU_URL = app.config["BASE_MOVIEGLU_URL"]
 REQUEST_RETRIES = app.config["REQUEST_RETRIES"]
 
 
-def get_request(headers, route_name, request_cls, response_cls):
+def get_request(headers, route_name, params, response_cls):
     """Helper function to perform get request to MovieGlu API"""
-    request_data = request_cls(**request.args.to_dict())
     for _ in range(REQUEST_RETRIES):
         try:
             response = requests.get(
                 f"{BASE_MOVIEGLU_URL}{route_name}/",
-                params=request_data.dict(),
+                params=params,
                 headers=headers,
             )
             status_code = response.status_code
@@ -36,7 +37,13 @@ def get_request(headers, route_name, request_cls, response_cls):
                     200,
                 )
             elif status_code == HTTPStatus.NO_CONTENT:
-                return make_response([]), 204
+                response_object = {"message": "No content received"}
+                return (
+                    make_response(
+                        MoviesErrorResponse.parse_obj(response_object).dict()
+                    ),
+                    204,
+                )
             else:
                 app.logger.warning(f"Unaccepted status code received: {status_code}")
                 continue
@@ -47,46 +54,49 @@ def get_request(headers, route_name, request_cls, response_cls):
     response_object = {
         "message": f"Request timed out, attempted {REQUEST_RETRIES} times"
     }
-    return make_response(jsonify(response_object)), 408
+    return make_response(MoviesErrorResponse.parse_obj(response_object).dict()), 408
 
 
 @movies_blueprint.route("/movies/nowshowing", methods=["GET"])
 @add_request_headers
-def get_movies_now_showing(headers=None):
+@validate()
+def get_movies_now_showing(query: NowshowingGetRequest, headers=None):
     """
     Retrieve the currently showing movies
     """
     return get_request(
         route_name="filmsNowShowing",
         headers=headers,
-        request_cls=NowshowingGetRequest,
+        params=query.dict(),
         response_cls=NowshowingGetResponse,
     )
 
 
 @movies_blueprint.route("/movies/comingsoon", methods=["GET"])
 @add_request_headers
-def get_movies_coming_soon(headers=None):
+@validate()
+def get_movies_coming_soon(query: ComingsoonGetRequest, headers=None):
     """
     Retrieve the movies coming soon
     """
     return get_request(
         route_name="filmsComingSoon",
         headers=headers,
-        request_cls=ComingsoonGetRequest,
+        params=query.dict(),
         response_cls=ComingsoonGetResponse,
     )
 
 
 @movies_blueprint.route("/movies/showtimes", methods=["GET"])
 @add_request_headers
-def get_movies_showtimes(headers=None):
+@validate()
+def get_movies_showtimes(query: ShowtimesGetRequest, headers=None):
     """
     Retrieve the showtimes for a selected movie and date
     """
     return get_request(
         route_name="filmShowTimes",
         headers=headers,
-        request_cls=ShowtimesGetRequest,
+        params=query.dict(),
         response_cls=ShowtimesGetResponse,
     )

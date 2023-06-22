@@ -1,36 +1,36 @@
 from flask import request, make_response
+from flask_pydantic import validate
 
 from what_movie_server.app import app, bcrypt, db
 from what_movie_server.models import (
     User,
     BlacklistToken,
-    ErrorResponse,
-    RegisterPostRequest,
-    RegisterSuccessPostResponse,
-    LoginPostRequest,
-    LoginSuccessPostResponse,
+)
+from what_movie_server.schemas import (
+    AuthErrorResponse,
     GetstatusGetHeaders,
     GetstatusSuccessGetResponse,
+    LoginPostRequest,
+    LoginSuccessPostResponse,
     LogoutPostHeaders,
     LogoutSuccessPostResponse,
+    RegisterPostRequest,
+    RegisterSuccessPostResponse,
 )
 from what_movie_server.routes import auth_blueprint
 
 
 @auth_blueprint.route("/auth/register", methods=["POST"])
-def register():
+@validate()
+def register(body: RegisterPostRequest):
     """
     User Registration Resource
     """
-    # get the post data
-    post_data = RegisterPostRequest.parse_obj(request.get_json()).dict()
     # check if user already exists
-    user = User.query.filter_by(email=post_data.get("email")).first()
+    user = User.query.filter_by(email=body.email).first()
     if not user:
         try:
-            user = User(
-                email=post_data.get("email"), password=post_data.get("password")
-            )
+            user = User(email=body.email, password=body.password)
             # insert the user
             db.session.add(user)
             db.session.commit()
@@ -54,7 +54,7 @@ def register():
                 "message": "Some error occurred. Please try again.",
             }
             return (
-                make_response(ErrorResponse.parse_obj(response_object).dict()),
+                make_response(AuthErrorResponse.parse_obj(response_object).dict()),
                 401,
             )
     else:
@@ -63,24 +63,21 @@ def register():
             "message": "User already exists. Please Log in.",
         }
         return (
-            make_response(ErrorResponse.parse_obj(response_object).dict()),
+            make_response(AuthErrorResponse.parse_obj(response_object).dict()),
             202,
         )
 
 
 @auth_blueprint.route("/auth/login", methods=["POST"])
-def login():
+@validate()
+def login(body: LoginPostRequest):
     """
     User Login Resource
     """
-    # get the post data
-    post_data = LoginPostRequest.parse_obj(request.get_json()).dict()
     try:
         # fetch the user data
-        user = User.query.filter_by(email=post_data.get("email")).first()
-        if user and bcrypt.check_password_hash(
-            user.password, post_data.get("password")
-        ):
+        user = User.query.filter_by(email=body.email).first()
+        if user and bcrypt.check_password_hash(user.password, body.password):
             auth_token = user.encode_auth_token(user.id)
             if auth_token:
                 response_object = {
@@ -97,14 +94,14 @@ def login():
         else:
             response_object = {"status": "fail", "message": "User does not exist."}
             return (
-                make_response(ErrorResponse.parse_obj(response_object).dict()),
+                make_response(AuthErrorResponse.parse_obj(response_object).dict()),
                 404,
             )
     except Exception as e:
         app.logger.error(e)
         response_object = {"status": "fail", "message": "Try again"}
         return (
-            make_response(ErrorResponse.parse_obj(response_object).dict()),
+            make_response(AuthErrorResponse.parse_obj(response_object).dict()),
             500,
         )
 
@@ -125,7 +122,7 @@ def get_status():
                 "message": "Bearer token malformed.",
             }
             return (
-                make_response(ErrorResponse.parse_obj(response_object).dict()),
+                make_response(AuthErrorResponse.parse_obj(response_object).dict()),
                 401,
             )
     else:
@@ -151,7 +148,7 @@ def get_status():
             )
         response_object = {"status": "fail", "message": resp}
         return (
-            make_response(ErrorResponse.parse_obj(response_object).dict()),
+            make_response(AuthErrorResponse.parse_obj(response_object).dict()),
             401,
         )
     else:
@@ -160,7 +157,7 @@ def get_status():
             "message": "Provide a valid auth token.",
         }
         return (
-            make_response(ErrorResponse.parse_obj(response_object).dict()),
+            make_response(AuthErrorResponse.parse_obj(response_object).dict()),
             401,
         )
 
@@ -198,13 +195,13 @@ def logout():
             except Exception as e:
                 response_object = {"status": "fail", "message": e}
                 return (
-                    make_response(ErrorResponse.parse_obj(response_object).dict()),
+                    make_response(AuthErrorResponse.parse_obj(response_object).dict()),
                     200,
                 )
         else:
             response_object = {"status": "fail", "message": resp}
             return (
-                make_response(ErrorResponse.parse_obj(response_object).dict()),
+                make_response(AuthErrorResponse.parse_obj(response_object).dict()),
                 401,
             )
     else:
@@ -213,6 +210,6 @@ def logout():
             "message": "Provide a valid auth token.",
         }
         return (
-            make_response(ErrorResponse.parse_obj(response_object).dict()),
+            make_response(AuthErrorResponse.parse_obj(response_object).dict()),
             403,
         )
