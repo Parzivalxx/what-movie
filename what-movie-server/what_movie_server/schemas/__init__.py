@@ -20,12 +20,14 @@ from .favourites.delete.response.DeleteSuccessDeleteResponse import (
     DeleteSuccessDeleteResponse,
 )
 from .favourites.error.response.FavouritesErrorResponse import FavouritesErrorResponse
+from .favourites.list.request.ListGetRequest import ListGetRequest
 from .favourites.list.response.ListSuccessGetResponse import ListSuccessGetResponse
 from .favourites.read.response.ReadSuccessGetResponse import ReadSuccessGetResponse
 from .favourites.update.request.UpdatePayloadPutRequest import UpdatePayloadPutRequest
 from .favourites.update.response.UpdateSuccessPutResponse import (
     UpdateSuccessPutResponse,
 )
+from .favourites.common.response.withdata.Favourite import Favourite
 
 from .movies.comingsoon.request.ComingsoonGetRequest import ComingsoonGetRequest
 from .movies.comingsoon.response.ComingsoonGetResponse import ComingsoonGetResponse
@@ -49,10 +51,12 @@ __all__ = [
     "CreateSuccessPostResponse",
     "DeleteSuccessDeleteResponse",
     "FavouritesErrorResponse",
+    "ListGetRequest",
     "ListSuccessGetResponse",
     "ReadSuccessGetResponse",
     "UpdatePayloadPutRequest",
     "UpdateSuccessPutResponse",
+    "Favourite",
     "ComingsoonGetRequest",
     "ComingsoonGetResponse",
     "MoviesErrorResponse",

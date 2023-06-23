@@ -9,3 +9,6 @@ class Favourite(BaseModel):
     start_time: str
     end_time: str
     is_3d: bool
+
+    class Config:
+        orm_mode = True

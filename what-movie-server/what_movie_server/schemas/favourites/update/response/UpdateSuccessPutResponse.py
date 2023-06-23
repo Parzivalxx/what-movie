@@ -1,5 +1,5 @@
-from ...common.response.withdata.Favourite import Favourite
+from ...common.response.withdata.WithDataResponse import WithDataResponse
 
 
-class UpdateSuccessPutResponse(Favourite):
+class UpdateSuccessPutResponse(WithDataResponse):
     pass

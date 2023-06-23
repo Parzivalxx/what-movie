@@ -32,16 +32,21 @@ def get_request(headers, route_name, params, response_cls):
             )
             status_code = response.status_code
             if status_code == HTTPStatus.OK:
+                response_object = {
+                    "status": "success",
+                    "data": response.json(),
+                }
                 return (
-                    make_response(response_cls.parse_obj(response.json()).dict()),
+                    make_response(response_cls.parse_obj(response_object).dict()),
                     200,
                 )
             elif status_code == HTTPStatus.NO_CONTENT:
-                response_object = {"message": "No content received"}
+                response_object = {
+                    "status": "success",
+                    "data": None,
+                }
                 return (
-                    make_response(
-                        MoviesErrorResponse.parse_obj(response_object).dict()
-                    ),
+                    make_response(response_cls.parse_obj(response_object).dict()),
                     204,
                 )
             else:
@@ -52,7 +57,8 @@ def get_request(headers, route_name, params, response_cls):
             continue
     app.logger.error("Request run time error")
     response_object = {
-        "message": f"Request timed out, attempted {REQUEST_RETRIES} times"
+        "status": "fail",
+        "message": f"Request timed out, attempted {REQUEST_RETRIES} times",
     }
     return make_response(MoviesErrorResponse.parse_obj(response_object).dict()), 408
 

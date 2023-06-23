@@ -2,22 +2,23 @@ import time
 import json
 
 from what_movie_server.app import db
+from what_movie_server.schemas import RegisterPostRequest, LoginPostRequest
 from what_movie_server.models import User, BlacklistToken
 from tests.integration.base import BaseTestCase
 
 
-def register_user(self, email, password):
+def register_user(self, email: str, password: str):
     return self.client.post(
         "/auth/register",
-        data=json.dumps(dict(email=email, password=password)),
+        data=json.dumps(RegisterPostRequest(email=email, password=password).dict()),
         content_type="application/json",
     )
 
 
-def login_user(self, email, password):
+def login_user(self, email: str, password: str):
     return self.client.post(
         "/auth/login",
-        data=json.dumps(dict(email=email, password=password)),
+        data=json.dumps(LoginPostRequest(email=email, password=password).dict()),
         content_type="application/json",
     )
 
@@ -116,6 +117,7 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             # user registration
             resp_register = register_user(self, "joe@gmail.com", "123456")
+
             data_register = json.loads(resp_register.data.decode())
             self.assertTrue(data_register["status"] == "success")
             self.assertTrue(data_register["message"] == "Successfully registered.")

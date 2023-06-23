@@ -9,11 +9,13 @@ from what_movie_server.schemas import (
     UpdatePayloadPutRequest,
     UpdateSuccessPutResponse,
     DeleteSuccessDeleteResponse,
+    ListGetRequest,
     ListSuccessGetResponse,
+    Favourite,
 )
 from what_movie_server.models import User, Favourites
 from what_movie_server.routes import favourites_blueprint
-from what_movie_server.app import db
+from what_movie_server.app import db, app
 
 
 @favourites_blueprint.route("/favourites", methods=["POST"])
@@ -35,7 +37,7 @@ def create_favourite(body: CreatePayloadPostRequest):
             )
 
         # check if favourite already exists
-        existing_favourite = Favourites.query.filter_by(**body).first()
+        existing_favourite = Favourites.query.filter_by(**body.dict()).first()
         if existing_favourite:
             response_object = {
                 "status": "fail",
@@ -49,7 +51,7 @@ def create_favourite(body: CreatePayloadPostRequest):
             )
 
         # create new Favourites object
-        favourite = Favourites(**body)
+        favourite = Favourites(**body.dict())
 
         # insert the favourite
         db.session.add(favourite)
@@ -63,6 +65,7 @@ def create_favourite(body: CreatePayloadPostRequest):
             201,
         )
     except Exception as e:
+        app.logger.error(e, exc_info=True)
         response_object = {
             "status": "fail",
             "message": "Some error occurred. Please try again.",
@@ -92,13 +95,10 @@ def read_favourite(favourite_id: int):
             404,
         )
 
-    favourite_model = Favourites(**favourite)
-
     # Return the updated favourite as the response
     response_object = {
         "status": "success",
-        "message": f"Favourite {favourite_id} updated successfully",
-        "data": favourite_model.to_dict(),
+        "data": Favourite.from_orm(favourite),
     }
 
     return make_response(ReadSuccessGetResponse.parse_obj(response_object).dict()), 200
@@ -120,14 +120,14 @@ def update_favourite(favourite_id: int, body: UpdatePayloadPutRequest):
             404,
         )
 
-    favourite.update(**body.dict(exclude_unset=True))
+    for attr, value in body.dict().items():
+        setattr(favourite, attr, value)
     db.session.commit()
 
     # Return the updated favourite as the response
     response_object = {
         "status": "success",
-        "message": f"Favourite {favourite_id} updated successfully",
-        "data": favourite.to_dict(),
+        "data": Favourite.from_orm(favourite),
     }
 
     return (
@@ -161,23 +161,23 @@ def delete_favourite(favourite_id: int):
         "status": "success",
         "message": f"Favourite {favourite_id} deleted successfully",
     }
-    return make_response(
-        DeleteSuccessDeleteResponse.parse_obj(response_object.dict()), 200
+    return (
+        make_response(DeleteSuccessDeleteResponse.parse_obj(response_object).dict()),
+        200,
     )
 
 
-@favourites_blueprint.route("/favourites/<user_id>", methods=["GET"])
+@favourites_blueprint.route("/favourites", methods=["GET"])
 @validate()
-def list_favourites(user_id: int):
-    favourites = Favourites.query.filter_by(user_id=user_id).all()
+def list_favourites(query: ListGetRequest):
+    favourites = Favourites.query.filter_by(user_id=query.user_id).all()
 
     # Convert the favourites to a list of dictionaries
-    favourites_list = [favourite.to_dict() for favourite in favourites]
+    favourites_list = [Favourite.from_orm(favourite) for favourite in favourites]
 
     # Return the list of favourites as the response
     response_object = {
         "status": "success",
-        "message": "Favourites retrieved successfully",
         "data": favourites_list,
     }
     return make_response(ListSuccessGetResponse.parse_obj(response_object).dict()), 200

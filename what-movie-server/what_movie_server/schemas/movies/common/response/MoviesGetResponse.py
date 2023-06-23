@@ -1,10 +1,9 @@
 from pydantic import BaseModel
-from typing import List
+from typing import Optional
 
-from .Film import Film
-from .Status import Status
+from .MoviesData import MoviesData
 
 
 class MoviesGetResponse(BaseModel):
-    films: List[Film]
-    status: Status
+    status: str
+    data: Optional[MoviesData]
