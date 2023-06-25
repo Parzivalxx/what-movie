@@ -1,7 +1,9 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+environment = os.getenv("ENVIRONMENT", "dev")
+if environment == "dev":
+    load_dotenv()
 db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
 basedir = os.path.abspath(os.path.dirname(__file__))
