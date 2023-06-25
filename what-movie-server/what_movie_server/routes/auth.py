@@ -42,9 +42,7 @@ def register(body: RegisterPostRequest):
                 "auth_token": auth_token,
             }
             return (
-                make_response(
-                    RegisterSuccessPostResponse.parse_obj(response_object).dict()
-                ),
+                make_response(RegisterSuccessPostResponse.parse_obj(response_object).dict()),
                 201,
             )
         except Exception as e:
@@ -64,7 +62,7 @@ def register(body: RegisterPostRequest):
         }
         return (
             make_response(AuthErrorResponse.parse_obj(response_object).dict()),
-            202,
+            409,
         )
 
 
@@ -86,9 +84,7 @@ def login(body: LoginPostRequest):
                     "auth_token": auth_token,
                 }
                 return (
-                    make_response(
-                        LoginSuccessPostResponse.parse_obj(response_object).dict()
-                    ),
+                    make_response(LoginSuccessPostResponse.parse_obj(response_object).dict()),
                     200,
                 )
         else:
@@ -141,9 +137,7 @@ def get_status():
                 },
             }
             return (
-                make_response(
-                    GetstatusSuccessGetResponse.parse_obj(response_object).dict()
-                ),
+                make_response(GetstatusSuccessGetResponse.parse_obj(response_object).dict()),
                 200,
             )
         response_object = {"status": "fail", "message": resp}
@@ -187,9 +181,7 @@ def logout():
                     "message": "Successfully logged out.",
                 }
                 return (
-                    make_response(
-                        LogoutSuccessPostResponse.parse_obj(response_object).dict()
-                    ),
+                    make_response(LogoutSuccessPostResponse.parse_obj(response_object).dict()),
                     200,
                 )
             except Exception as e:

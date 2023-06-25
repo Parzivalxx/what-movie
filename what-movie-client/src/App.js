@@ -1,39 +1,43 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+import ErrorPage from "./pages/Error";
+import HomePage from "./pages/Home";
+import RootLayout from "./pages/Root";
+import AuthenticationPage, {
+  action as authAction,
+} from "./pages/Authentication";
+import MoviesPage from "./pages/Movies";
+import { action as logoutAction } from "./pages/Logout";
+import { tokenLoader } from "./utils/auth";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    errorElement: <ErrorPage />,
+    id: "root",
+    loader: tokenLoader,
+    children: [
+      { index: true, element: <HomePage /> },
+      {
+        path: "auth",
+        element: <AuthenticationPage />,
+        action: authAction,
+      },
+      {
+        path: "movies",
+        element: <MoviesPage />,
+      },
+      {
+        path: "logout",
+        action: logoutAction,
+      },
+    ],
+  },
+]);
 
 const App = () => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    // Create an instance of Axios with the base URL
-    const api = axios.create({
-      baseURL: "http://localhost:5000",
-    });
-    const fetchData = async () => {
-      try {
-        const response = await api.get("/api/data");
-        console.log(response.data);
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return (
-    <div>
-      {data ? (
-        <div>
-          <h1>{data.message}</h1>
-          <p>Number: {data.number}</p>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;
