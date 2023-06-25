@@ -1,6 +1,6 @@
 import json
 
-from what_movie_server.app import app, db
+from what_movie_server.app import db
 from what_movie_server.schemas import (
     CreatePayloadPostRequest,
     UpdatePayloadPutRequest,
@@ -8,10 +8,8 @@ from what_movie_server.schemas import (
     Favourite,
 )
 from what_movie_server.models import User, Favourites
+from tests.integration.helpers import compare_sqlalchemy_objects
 from tests.integration.base import BaseTestCase
-
-
-REQUEST_RETRIES = app.config["REQUEST_RETRIES"]
 
 
 def create_favourite(
@@ -87,18 +85,6 @@ def list_favourites(self, user_id: int):
     )
 
 
-def compare_sqlalchemy_objects(object1, object2):
-    # Get the attribute names of the instances
-    attributes = object1.__table__.columns.keys()
-
-    # Compare the attribute values
-    for attr in attributes:
-        if attr != "id":
-            if getattr(object1, attr) != getattr(object2, attr):
-                return False
-    return True
-
-
 class TestFavouritesBlueprint(BaseTestCase):
     def test_create_favourite_success(self):
         """Test creating favourites when all ok"""
@@ -124,14 +110,10 @@ class TestFavouritesBlueprint(BaseTestCase):
             is_3d=False,
         )
         data = json.loads(response.data.decode())
-        self.assertTrue(
-            compare_sqlalchemy_objects(current_favourite, expected_favourite)
-        )
+        self.assertTrue(compare_sqlalchemy_objects(current_favourite, expected_favourite))
         self.assertTrue(response.content_type == "application/json")
         self.assertTrue(data["status"] == "success")
-        self.assertTrue(
-            data["message"] == f"Favourite {current_favourite.id} added successfully"
-        )
+        self.assertTrue(data["message"] == f"Favourite {current_favourite.id} added successfully")
         self.assertEqual(response.status_code, 201)
 
     def test_create_favourite_no_user(self):
@@ -177,9 +159,7 @@ class TestFavouritesBlueprint(BaseTestCase):
         existing_favourite = Favourites.query.filter_by(user_id=1).first()
         data = json.loads(response.data.decode())
         self.assertTrue(data["status"] == "fail")
-        self.assertTrue(
-            data["message"] == f"This favourite already exists: {existing_favourite.id}"
-        )
+        self.assertTrue(data["message"] == f"This favourite already exists: {existing_favourite.id}")
         self.assertTrue(response.content_type == "application/json")
         self.assertEqual(response.status_code, 409)
 
@@ -205,9 +185,7 @@ class TestFavouritesBlueprint(BaseTestCase):
 
         data = json.loads(response.data.decode())
         self.assertTrue(data["status"] == "success")
-        self.assertTrue(
-            compare_sqlalchemy_objects(current_favourite, expected_favourite)
-        )
+        self.assertTrue(compare_sqlalchemy_objects(current_favourite, expected_favourite))
         self.assertTrue(data["data"] == Favourite.from_orm(current_favourite).dict())
         self.assertTrue(response.content_type == "application/json")
         self.assertEqual(response.status_code, 200)
@@ -259,9 +237,7 @@ class TestFavouritesBlueprint(BaseTestCase):
         )
 
         data = json.loads(response.data.decode())
-        self.assertTrue(
-            compare_sqlalchemy_objects(current_favourite, expected_favourite)
-        )
+        self.assertTrue(compare_sqlalchemy_objects(current_favourite, expected_favourite))
         self.assertTrue(data["status"] == "success")
         self.assertTrue(data["data"] == Favourite.from_orm(current_favourite).dict())
         self.assertTrue(response.content_type == "application/json")
@@ -308,9 +284,7 @@ class TestFavouritesBlueprint(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertIsNone(favourite)
         self.assertTrue(data["status"] == "success")
-        self.assertTrue(
-            data["message"] == f"Favourite {favourite_id} deleted successfully"
-        )
+        self.assertTrue(data["message"] == f"Favourite {favourite_id} deleted successfully")
         self.assertTrue(response.content_type == "application/json")
         self.assertEqual(response.status_code, 200)
 

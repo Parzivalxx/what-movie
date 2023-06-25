@@ -1,7 +1,11 @@
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
+db_user = os.getenv("DB_USER")
+db_password = os.getenv("DB_PASSWORD")
 basedir = os.path.abspath(os.path.dirname(__file__))
-postgres_local_base = "postgresql://postgres:Parzival051099!@localhost/"
+postgres_local_base = f"postgresql://{db_user}:{db_password}@localhost/"
 database_name = "movie_showtimes"
 
 
@@ -10,6 +14,7 @@ class BaseConfig:
 
     SECRET_KEY = os.getenv("SECRET_KEY", "my_precious")
     API_KEY = os.getenv("API_KEY", "")
+    AUTHORIZATION = os.getenv("AUTHORIZATION", "")
     DEBUG = False
     BCRYPT_LOG_ROUNDS = 13
     REQUEST_RETRIES = 3

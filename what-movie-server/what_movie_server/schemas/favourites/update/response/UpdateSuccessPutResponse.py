@@ -1,5 +1,8 @@
-from ...common.response.withdata.WithDataResponse import WithDataResponse
+from pydantic import BaseModel
+
+from ...common.response.withdata.Favourite import Favourite
 
 
-class UpdateSuccessPutResponse(WithDataResponse):
-    pass
+class UpdateSuccessPutResponse(BaseModel):
+    status: str
+    data: Favourite

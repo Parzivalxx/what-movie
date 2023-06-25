@@ -4,3 +4,4 @@ what-movie-client/node_modules
 # server
 **pycache**
 */tmp
+*.env

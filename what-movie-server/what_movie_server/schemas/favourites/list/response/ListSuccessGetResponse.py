@@ -1,5 +1,9 @@
-from ...common.response.withdata.WithDataResponse import WithDataResponse
+from pydantic import BaseModel
+from typing import List
+
+from ...common.response.withdata.Favourite import Favourite
 
 
-class ListSuccessGetResponse(WithDataResponse):
-    pass
+class ListSuccessGetResponse(BaseModel):
+    status: str
+    data: List[Favourite]

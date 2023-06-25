@@ -3,6 +3,7 @@
     "python.formatting.provider": "none",
     "python.linting.flake8Args": [
         "--max-line-length=120",
+        "--ignore=E402",
     ],
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",

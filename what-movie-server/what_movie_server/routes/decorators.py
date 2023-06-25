@@ -12,7 +12,7 @@ def add_request_headers(func):
         "api-version": "v200",
         "geolocation": "-22.0;14.0",
         "device-datetime": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
-        "Authorization": "Basic TklMXzNfWFg6aFVwU2RVbU81eW12",
+        "Authorization": app.config["AUTHORIZATION"],
         "User-Agent": "Chrome v22.2 Linux Ubuntu",
         "Accept": "*/*",
         "Accept-Encoding": "gzip, deflate, br",

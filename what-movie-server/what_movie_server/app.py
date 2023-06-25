@@ -19,6 +19,7 @@ migrate = Migrate(app, db)
 from what_movie_server.routes.auth import auth_blueprint
 from what_movie_server.routes.movies import movies_blueprint
 from what_movie_server.routes.favourites import favourites_blueprint
+from what_movie_server.routes.users import users_blueprint
 from what_movie_server.commands import register_cli_commands
 
 register_cli_commands(app, db)
@@ -26,6 +27,7 @@ register_cli_commands(app, db)
 app.register_blueprint(auth_blueprint)
 app.register_blueprint(movies_blueprint)
 app.register_blueprint(favourites_blueprint)
+app.register_blueprint(users_blueprint)
 
 if __name__ == "__main__":
     app.run()
