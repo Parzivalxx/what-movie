@@ -7,7 +7,7 @@ from flask_migrate import Migrate
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 
 app_settings = os.getenv("APP_SETTINGS", "what_movie_server.config.DevelopmentConfig")
 app.config.from_object(app_settings)
@@ -16,11 +16,11 @@ bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from what_movie_server.routes.auth import auth_blueprint
-from what_movie_server.routes.movies import movies_blueprint
-from what_movie_server.routes.favourites import favourites_blueprint
-from what_movie_server.routes.users import users_blueprint
-from what_movie_server.commands import register_cli_commands
+from what_movie_server.routes.auth import auth_blueprint  # noqa
+from what_movie_server.routes.movies import movies_blueprint  # noqa
+from what_movie_server.routes.favourites import favourites_blueprint  # noqa
+from what_movie_server.routes.users import users_blueprint  # noqa
+from what_movie_server.commands import register_cli_commands  # noqa
 
 register_cli_commands(app, db)
 

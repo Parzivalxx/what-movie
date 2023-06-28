@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { Outlet, useLoaderData, useSubmit } from "react-router-dom";
 
-import MainNavigation from "../components/MainNavigation";
+import AuthNavbar from "../components/AuthNavbar";
+import NotAuthNavbar from "../components/NotAuthNavbar";
 import { getTokenDuration } from "../utils/auth";
+import { useAuth } from "../hooks/Auth";
 
 const RootLayout = () => {
   const token = useLoaderData();
   const submit = useSubmit();
+  const { auth } = useAuth();
 
   useEffect(() => {
     if (!token) {
@@ -28,7 +31,7 @@ const RootLayout = () => {
 
   return (
     <>
-      <MainNavigation />
+      {auth ? <AuthNavbar /> : <NotAuthNavbar />}
       <main>
         <Outlet />
       </main>
