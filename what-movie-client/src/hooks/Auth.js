@@ -31,7 +31,9 @@ const AuthProvider = ({ children }) => {
         setUser(null);
       }
     };
-    isAuth();
+    if (token !== null) {
+      isAuth();
+    }
   }, [auth]);
 
   return (

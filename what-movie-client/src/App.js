@@ -1,11 +1,13 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import ErrorPage from "./pages/Error";
-import HomePage from "./pages/Home";
 import RootLayout from "./pages/Root";
 import AuthenticationPage from "./pages/Authentication";
-import MoviesPage from "./pages/Movies";
 import { tokenLoader } from "./utils/auth";
+import MoviesRootLayout from "./pages/MoviesRoot";
+import NowShowingMoviesPage, {
+  loader as nowShowingMoviesLoader,
+} from "./pages/Movies";
 
 const router = createBrowserRouter([
   {
@@ -15,14 +17,20 @@ const router = createBrowserRouter([
     id: "root",
     loader: tokenLoader,
     children: [
-      { index: true, element: <HomePage /> },
+      {
+        path: "",
+        element: <MoviesRootLayout />,
+        children: [
+          {
+            path: "",
+            element: <NowShowingMoviesPage />,
+            loader: nowShowingMoviesLoader,
+          },
+        ],
+      },
       {
         path: "auth",
         element: <AuthenticationPage />,
-      },
-      {
-        path: "movies",
-        element: <MoviesPage />,
       },
     ],
   },

@@ -8,7 +8,6 @@ const AuthNavbar = () => {
 
   const logout = async (e) => {
     e.preventDefault();
-    const url = e.target.action;
     const token = localStorage.getItem("token");
     const headers = {
       Authorization: `Basic ${token}`,
@@ -28,7 +27,7 @@ const AuthNavbar = () => {
 
       if (resData.status === "fail") {
         alert(resData.message);
-        navigate(url);
+        return;
       }
       localStorage.removeItem("token");
       localStorage.removeItem("expiration");
@@ -66,7 +65,7 @@ const AuthNavbar = () => {
               View favourites
             </a>
             <div className="dropdown-divider"></div>
-            <Form onClick={logout} method="post">
+            <Form onSubmit={logout} method="post">
               <button className="dropdown-item">Log out</button>
             </Form>
           </div>

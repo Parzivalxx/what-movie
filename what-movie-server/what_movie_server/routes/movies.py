@@ -1,4 +1,4 @@
-from flask import make_response, request
+from flask import make_response
 from flask_pydantic import validate
 from http import HTTPStatus
 import requests

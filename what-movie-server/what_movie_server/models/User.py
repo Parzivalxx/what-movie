@@ -20,9 +20,7 @@ class User(db.Model):
 
     def __init__(self, email, password, admin=False):
         self.email = email
-        self.password = bcrypt.generate_password_hash(
-            password, app.config.get("BCRYPT_LOG_ROUNDS")
-        ).decode()
+        self.password = bcrypt.generate_password_hash(password, app.config.get("BCRYPT_LOG_ROUNDS")).decode()
         self.registered_on = datetime.datetime.now()
         self.admin = admin
 
@@ -33,8 +31,7 @@ class User(db.Model):
         """
         try:
             payload = {
-                "exp": datetime.datetime.utcnow()
-                + datetime.timedelta(days=0, seconds=5),
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30),
                 "iat": datetime.datetime.utcnow(),
                 "sub": user_id,
             }
@@ -50,9 +47,7 @@ class User(db.Model):
         :return: integer|string
         """
         try:
-            payload = jwt.decode(
-                auth_token, app.config.get("SECRET_KEY"), algorithms=["HS256"]
-            )
+            payload = jwt.decode(auth_token, app.config.get("SECRET_KEY"), algorithms=["HS256"])
             is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
             if is_blacklisted_token:
                 return "Token blacklisted. Please log in again."
