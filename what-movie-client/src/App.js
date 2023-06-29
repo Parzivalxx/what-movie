@@ -5,9 +5,6 @@ import RootLayout from "./pages/Root";
 import AuthenticationPage from "./pages/Authentication";
 import { tokenLoader } from "./utils/auth";
 import MoviesRootLayout from "./pages/MoviesRoot";
-import NowShowingMoviesPage, {
-  loader as nowShowingMoviesLoader,
-} from "./pages/Movies";
 
 const router = createBrowserRouter([
   {
@@ -20,13 +17,6 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <MoviesRootLayout />,
-        children: [
-          {
-            path: "",
-            element: <NowShowingMoviesPage />,
-            loader: nowShowingMoviesLoader,
-          },
-        ],
       },
       {
         path: "auth",

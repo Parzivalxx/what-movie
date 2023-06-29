@@ -1,6 +1,4 @@
-import { Outlet } from "react-router-dom";
-
-import MoviesNavigation from "../components/MoviesNavigation";
+import MoviesPage from "./Movies";
 import PageContent from "../components/PageContent";
 
 const MoviesRootLayout = () => {
@@ -11,8 +9,7 @@ const MoviesRootLayout = () => {
           Browse the latest movies available now or coming soon to cinemas near
           you!
         </p>
-        <MoviesNavigation />
-        <Outlet />
+        <MoviesPage />
       </PageContent>
     </>
   );

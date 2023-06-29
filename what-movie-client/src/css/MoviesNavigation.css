@@ -1,0 +1,4 @@
+.nav-btn:hover, .nav-btn:active {
+    background-color: blue;
+    color: white;
+}

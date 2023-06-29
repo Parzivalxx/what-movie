@@ -1,44 +1,79 @@
-import { Suspense } from "react";
-import { useLoaderData, json, defer, Await } from "react-router-dom";
+import { Suspense, useState, useEffect } from "react";
+import { json, Await } from "react-router-dom";
 
+import "../css/MoviesNavigation.css";
 import MoviesList from "../components/MoviesList";
 
-const NowShowingMoviesPage = () => {
-  const { movies } = useLoaderData();
+const MoviesPage = () => {
+  const [activeButton, setActiveButton] = useState("nowshowing");
+  const [moviesData, setMoviesData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleButtonClick = (buttonId) => {
+    setActiveButton(buttonId);
+    loadMovies(buttonId);
+  };
+
+  useEffect(() => {
+    // Run fetchData on initial page load
+    loadMovies(activeButton);
+  }, []); // Empty dependency array ensures it runs only once on initial load
+
+  const loadMovies = async (buttonId) => {
+    setIsLoading(true);
+    const response = await fetch(`http://localhost:5000/movies/${buttonId}`, {
+      method: "GET",
+      // body: JSON.stringify({ n: 10 }),
+    });
+
+    if (!response.ok) {
+      throw json(
+        { message: "Could not fetch now showing movies." },
+        {
+          status: 500,
+        }
+      );
+    } else {
+      const resData = await response.json();
+      console.log(resData.data.films);
+      setMoviesData(resData.data.films);
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <Suspense fallback={<p style={{ textAlign: "center" }}>Loading...</p>}>
-      <Await resolve={movies}>
-        {(loadedMovies) => <MoviesList movies={loadedMovies} />}
-      </Await>
-    </Suspense>
+    <>
+      <ul className="nav nav-pills justify-content-center">
+        <li className="nav-item">
+          <button
+            id="nowshowing"
+            className={`btn nav-btn ${
+              activeButton === "nowshowing" ? "active" : ""
+            }`}
+            onClick={() => handleButtonClick("nowshowing")}
+          >
+            Now Showing
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            id="comingsoon"
+            className={`btn nav-btn ${
+              activeButton === "comingsoon" ? "active" : ""
+            }`}
+            onClick={() => handleButtonClick("comingsoon")}
+          >
+            Coming Soon
+          </button>
+        </li>
+      </ul>
+      {isLoading ? (
+        <div style={{ textAlign: "center", marginTop: 15 }}>Loading...</div>
+      ) : (
+        <MoviesList movies={moviesData} />
+      )}
+    </>
   );
 };
 
-export default NowShowingMoviesPage;
-
-const loadNowShowingMovies = async () => {
-  const response = await fetch("http://localhost:5000/movies/nowshowing", {
-    method: "GET",
-    // body: JSON.stringify({ n: 10 }),
-  });
-
-  if (!response.ok) {
-    throw json(
-      { message: "Could not fetch now showing movies." },
-      {
-        status: 500,
-      }
-    );
-  } else {
-    const resData = await response.json();
-    console.log(resData.data.films);
-    return resData.data.films;
-  }
-};
-
-export const loader = () => {
-  return defer({
-    movies: loadNowShowingMovies(),
-  });
-};
+export default MoviesPage;
