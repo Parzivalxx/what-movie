@@ -7,4 +7,4 @@ class FavouritePayloadRequest(BaseModel):
     cinema_id: int
     start_time: str
     end_time: str
-    is_3d: bool
+    cinema_type: str

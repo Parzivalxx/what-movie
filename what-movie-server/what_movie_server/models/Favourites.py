@@ -16,7 +16,7 @@ class Favourites(db.Model):
     cinema_id = db.Column(db.Integer, nullable=False)
     start_time = db.Column(db.String(10), nullable=False)
     end_time = db.Column(db.String(10), nullable=False)
-    is_3d = db.Column(db.Boolean, nullable=False)
+    cinema_type = db.Column(db.String(10), nullable=False)
 
     user = db.relationship(
         "User",
@@ -30,11 +30,11 @@ class Favourites(db.Model):
         cinema_id: int,
         start_time: str,
         end_time: str,
-        is_3d: bool,
+        cinema_type: str,
     ) -> None:
         self.user_id = user_id
         self.film_id = film_id
         self.cinema_id = cinema_id
         self.start_time = start_time
         self.end_time = end_time
-        self.is_3d = is_3d
+        self.cinema_type = cinema_type

@@ -81,7 +81,7 @@ class TestUsersBlueprint(BaseTestCase):
         user_id = 1
         user = User(email="joe@gmail.com", password="test")
         favourite = Favourites(
-            user_id=user_id, film_id=1, cinema_id=1, start_time="00:00", end_time="11:11", is_3d=False
+            user_id=user_id, film_id=1, cinema_id=1, start_time="00:00", end_time="11:11", cinema_type="Standard"
         )
         db.session.add(user)
         db.session.add(favourite)

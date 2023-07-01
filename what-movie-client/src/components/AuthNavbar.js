@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/Auth";
 import "../css/Navbar.css";
 
 const AuthNavbar = () => {
-  const { setAuth, user } = useAuth();
+  const { setAuth, user, setUser } = useAuth();
   const navigate = useNavigate();
   const submit = useSubmit();
 
@@ -15,6 +15,7 @@ const AuthNavbar = () => {
     if (!token || token === "EXPIRED") {
       submit(null, { action: "/logout", method: "post" });
       setAuth(false);
+      setUser(null);
       return navigate("/");
     }
     const headers = {

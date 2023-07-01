@@ -17,6 +17,7 @@ const AuthProvider = ({ children }) => {
     const token = tokenLoader();
     if (!token || token === "EXPIRED") {
       setAuth(false);
+      setUser(null);
       return;
     }
     const headers = {
@@ -47,7 +48,7 @@ const AuthProvider = ({ children }) => {
   }, [auth]);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, user }}>
+    <AuthContext.Provider value={{ auth, setAuth, user, setUser }}>
       {children}
     </AuthContext.Provider>
   );

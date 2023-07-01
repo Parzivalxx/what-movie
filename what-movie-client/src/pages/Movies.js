@@ -17,7 +17,7 @@ const MoviesPage = () => {
   useEffect(() => {
     // Run fetchData on initial page load
     loadMovies(activeButton);
-  }, []); // Empty dependency array ensures it runs only once on initial load
+  }, [activeButton]); // Empty dependency array ensures it runs only once on initial load
 
   const loadMovies = async (buttonId) => {
     setIsLoading(true);

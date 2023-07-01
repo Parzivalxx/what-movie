@@ -19,7 +19,7 @@ def create_favourite(
     cinema_id: int,
     start_time: str,
     end_time: int,
-    is_3d: bool,
+    cinema_type: str,
 ):
     return self.client.post(
         "/favourites",
@@ -30,7 +30,7 @@ def create_favourite(
                 cinema_id=cinema_id,
                 start_time=start_time,
                 end_time=end_time,
-                is_3d=is_3d,
+                cinema_type=cinema_type,
             ).dict()
         ),
         content_type="application/json",
@@ -52,7 +52,7 @@ def update_favourite(
     cinema_id: int,
     start_time: str,
     end_time: int,
-    is_3d: bool,
+    cinema_type: str,
 ):
     return self.client.put(
         f"/favourites/{favourite_id}",
@@ -63,7 +63,7 @@ def update_favourite(
                 cinema_id=cinema_id,
                 start_time=start_time,
                 end_time=end_time,
-                is_3d=is_3d,
+                cinema_type=cinema_type,
             ).dict()
         ),
         content_type="application/json",
@@ -98,7 +98,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         current_favourite = Favourites.query.filter_by(user_id=1).first()
         expected_favourite = Favourites(
@@ -107,7 +107,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         data = json.loads(response.data.decode())
         self.assertTrue(compare_sqlalchemy_objects(current_favourite, expected_favourite))
@@ -125,7 +125,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         data = json.loads(response.data.decode())
         self.assertTrue(data["status"] == "fail")
@@ -142,7 +142,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         db.session.add(user)
         db.session.add(favourite)
@@ -154,7 +154,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         existing_favourite = Favourites.query.filter_by(user_id=1).first()
         data = json.loads(response.data.decode())
@@ -172,7 +172,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         db.session.add(user)
         db.session.add(favourite)
@@ -209,7 +209,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         db.session.add(user)
         db.session.add(favourite)
@@ -222,7 +222,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
 
         # check that the favourite actually updated in the table
@@ -233,7 +233,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
 
         data = json.loads(response.data.decode())
@@ -254,7 +254,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         data = json.loads(response.data.decode())
         self.assertTrue(data["status"] == "fail")
@@ -272,7 +272,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         db.session.add(user)
         db.session.add(favourite)
@@ -307,7 +307,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         favourite_2 = Favourites(
             user_id=1,
@@ -315,7 +315,7 @@ class TestFavouritesBlueprint(BaseTestCase):
             cinema_id=1,
             start_time="00:00",
             end_time="11:11",
-            is_3d=False,
+            cinema_type="Standard",
         )
         db.session.add(user)
         db.session.add(favourite_1)

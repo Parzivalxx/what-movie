@@ -9,10 +9,12 @@ import { useAuth } from "../hooks/Auth";
 const RootLayout = () => {
   const token = useLoaderData();
   const submit = useSubmit();
-  const { auth, setAuth } = useAuth();
+  const { auth, setAuth, setUser } = useAuth();
 
   useEffect(() => {
     if (!token) {
+      setAuth(false);
+      setUser(null);
       return;
     }
 
@@ -20,6 +22,7 @@ const RootLayout = () => {
       submit(null, { action: "/logout", method: "post" });
       alert("Token expired, please sign in again");
       setAuth(false);
+      setUser(null);
       return;
     }
 
@@ -30,8 +33,9 @@ const RootLayout = () => {
       submit(null, { action: "/logout", method: "post" });
       alert("Token expired, please sign in again");
       setAuth(false);
+      setUser(null);
     }, tokenDuration);
-  }, [token, submit]);
+  }, [token, submit, setAuth, setUser]);
 
   return (
     <>

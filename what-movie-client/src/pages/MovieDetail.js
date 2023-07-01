@@ -9,9 +9,12 @@ import {
 
 import Showtimes from "../components/Showtimes";
 import "../css/MovieDetail.css";
+import { useAuth } from "../hooks/Auth";
 
 const MovieDetailPage = () => {
   const { showtimes } = useRouteLoaderData("movie-showtimes");
+  const { user } = useAuth();
+  console.log(user);
   const location = useLocation();
   const {
     ageRating,
@@ -90,8 +93,10 @@ const MovieDetailPage = () => {
               <p style={{ textAlign: "center", marginTop: 15 }}>Loading...</p>
             }
           >
-            <Await resolve={showtimes}>
-              {(loadedShowtimes) => <Showtimes showtimes={loadedShowtimes} />}
+            <Await resolve={[user, showtimes]}>
+              {([user, loadedShowtimes]) => (
+                <Showtimes showtimes={loadedShowtimes} user={user} />
+              )}
             </Await>
           </Suspense>
         </div>
