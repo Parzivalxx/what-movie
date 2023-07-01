@@ -1,5 +1,5 @@
-import { Suspense, useState, useEffect } from "react";
-import { json, Await } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { json } from "react-router-dom";
 
 import "../css/MoviesNavigation.css";
 import MoviesList from "../components/MoviesList";
@@ -21,23 +21,27 @@ const MoviesPage = () => {
 
   const loadMovies = async (buttonId) => {
     setIsLoading(true);
-    const response = await fetch(`http://localhost:5000/movies/${buttonId}`, {
-      method: "GET",
-      // body: JSON.stringify({ n: 10 }),
-    });
-
-    if (!response.ok) {
-      throw json(
-        { message: "Could not fetch now showing movies." },
-        {
-          status: 500,
-        }
-      );
-    } else {
-      const resData = await response.json();
-      console.log(resData.data.films);
-      setMoviesData(resData.data.films);
-      setIsLoading(false);
+    try {
+      const response = await fetch(`http://localhost:5000/movies/${buttonId}`, {
+        method: "GET",
+        // body: JSON.stringify({ n: 10 }),
+      });
+      if (!response.ok) {
+        throw json(
+          { message: "Could not fetch now showing movies." },
+          {
+            status: 500,
+          }
+        );
+      } else {
+        const resData = await response.json();
+        console.log(resData.data.films);
+        setMoviesData(resData.data.films);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      return;
     }
   };
 

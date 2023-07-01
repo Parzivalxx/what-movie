@@ -1,8 +1,10 @@
 import { NavLink } from "react-router-dom";
 
+import "../css/Navbar.css";
+
 const NotAuthNavbar = () => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light ps-5 pe-5">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
       <NavLink to="/" className="navbar-brand">
         What Movie?
       </NavLink>

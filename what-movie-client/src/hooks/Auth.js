@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { tokenLoader } from "../utils/auth";
 
 const AuthContext = createContext({
   auth: null,
@@ -13,7 +14,11 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = tokenLoader();
+    if (!token || token === "EXPIRED") {
+      setAuth(false);
+      return;
+    }
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Basic ${token}`,
@@ -24,16 +29,21 @@ const AuthProvider = ({ children }) => {
           method: "GET",
           headers: headers,
         });
+        if (!res.ok) {
+          setAuth(false);
+          setUser(null);
+          return;
+        }
         const resData = await res.json();
+        setAuth(true);
         setUser(resData.data);
       } catch (error) {
         console.error(error);
+        setAuth(false);
         setUser(null);
       }
     };
-    if (token !== null) {
-      isAuth();
-    }
+    isAuth();
   }, [auth]);
 
   return (

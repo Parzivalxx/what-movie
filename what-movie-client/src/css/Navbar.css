@@ -1,0 +1,18 @@
+.custom-navbar {
+    padding-left: 21rem;
+    padding-right: 21rem;
+}
+
+@media (max-width: 1500px) {
+    .custom-navbar {
+        padding-left: 5rem;
+        padding-right: 5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .custom-navbar {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}

@@ -31,7 +31,7 @@ class User(db.Model):
         """
         try:
             payload = {
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30),
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=app.config["TOKEN_EXPIRATION_TIME"]),
                 "iat": datetime.datetime.utcnow(),
                 "sub": user_id,
             }

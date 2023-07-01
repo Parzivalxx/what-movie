@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { json } from "react-router-dom";
 
-import classes from "./AuthForm.module.css";
+import "../css/AuthForm.css";
 import { useAuth } from "../hooks/Auth";
 
 const AuthForm = () => {
@@ -60,7 +60,7 @@ const AuthForm = () => {
 
       localStorage.setItem("token", resData.auth_token);
       const expiration = new Date();
-      expiration.setHours(expiration.getHours() + 1);
+      expiration.setSeconds(expiration.getSeconds() + 36000);
       localStorage.setItem("expiration", expiration.toISOString());
       return navigate("/");
     } catch (error) {
@@ -70,7 +70,7 @@ const AuthForm = () => {
 
   return (
     <>
-      <Form method="post" onSubmit={login} className={classes.form}>
+      <Form method="post" onSubmit={login} className="form">
         <h1>{isLogin ? "Log in" : "Sign up"}</h1>
         {data && data.errors && (
           <ul>

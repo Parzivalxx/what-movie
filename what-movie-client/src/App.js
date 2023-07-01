@@ -5,6 +5,10 @@ import RootLayout from "./pages/Root";
 import AuthenticationPage from "./pages/Authentication";
 import { tokenLoader } from "./utils/auth";
 import MoviesRootLayout from "./pages/MoviesRoot";
+import { action as logoutAction } from "./pages/Logout";
+import MovieDetailPage, {
+  loader as movieDetailsLoader,
+} from "./pages/MovieDetail";
 
 const router = createBrowserRouter([
   {
@@ -15,12 +19,27 @@ const router = createBrowserRouter([
     loader: tokenLoader,
     children: [
       {
-        path: "",
+        index: true,
         element: <MoviesRootLayout />,
       },
       {
         path: "auth",
         element: <AuthenticationPage />,
+      },
+      {
+        path: "logout",
+        action: logoutAction,
+      },
+      {
+        path: "movies",
+        children: [
+          {
+            path: ":movieId",
+            id: "movie-showtimes",
+            element: <MovieDetailPage />,
+            loader: movieDetailsLoader,
+          },
+        ],
       },
     ],
   },

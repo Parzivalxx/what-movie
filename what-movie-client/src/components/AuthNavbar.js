@@ -1,14 +1,22 @@
-import { NavLink, Form, useNavigate } from "react-router-dom";
+import { NavLink, Form, useNavigate, useSubmit } from "react-router-dom";
 
+import { tokenLoader } from "../utils/auth";
 import { useAuth } from "../hooks/Auth";
+import "../css/Navbar.css";
 
 const AuthNavbar = () => {
   const { setAuth, user } = useAuth();
   const navigate = useNavigate();
+  const submit = useSubmit();
 
   const logout = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
+    const token = tokenLoader();
+    if (!token || token === "EXPIRED") {
+      submit(null, { action: "/logout", method: "post" });
+      setAuth(false);
+      return navigate("/");
+    }
     const headers = {
       Authorization: `Basic ${token}`,
       withCredentials: true,
@@ -40,7 +48,7 @@ const AuthNavbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light ps-5 pe-5">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
       <NavLink to="/" className="navbar-brand">
         What Movie?
       </NavLink>
