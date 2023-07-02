@@ -14,7 +14,6 @@ import { useAuth } from "../hooks/Auth";
 const MovieDetailPage = () => {
   const { showtimes } = useRouteLoaderData("movie-showtimes");
   const { user } = useAuth();
-  console.log(user);
   const location = useLocation();
   const {
     ageRating,
@@ -93,8 +92,8 @@ const MovieDetailPage = () => {
               <p style={{ textAlign: "center", marginTop: 15 }}>Loading...</p>
             }
           >
-            <Await resolve={[user, showtimes]}>
-              {([user, loadedShowtimes]) => (
+            <Await resolve={showtimes}>
+              {(loadedShowtimes) => (
                 <Showtimes showtimes={loadedShowtimes} user={user} />
               )}
             </Await>
@@ -118,6 +117,7 @@ const loadShowtimes = async (id) => {
     n: 10,
   };
   const queryString = new URLSearchParams(params).toString();
+  // console.log(id);
   const response = await fetch(
     `http://localhost:5000/movies/showtimes?${queryString}`,
     {
