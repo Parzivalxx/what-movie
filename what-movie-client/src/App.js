@@ -9,6 +9,7 @@ import { action as logoutAction } from "./pages/Logout";
 import MovieDetailPage, {
   loader as movieDetailsLoader,
 } from "./pages/MovieDetail";
+import FavouritesPage from "./pages/Favourites";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
             loader: movieDetailsLoader,
           },
         ],
+      },
+      {
+        path: "favourites",
+        element: <FavouritesPage />,
       },
     ],
   },

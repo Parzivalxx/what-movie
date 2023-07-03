@@ -5,7 +5,7 @@ from what_movie_server.schemas import (
     CreatePayloadPostRequest,
     CreateSuccessPostResponse,
     ReadSuccessGetResponse,
-    FavouritesErrorResponse,
+    ErrorResponse,
     UpdatePayloadPutRequest,
     UpdateSuccessPutResponse,
     DeleteSuccessDeleteResponse,
@@ -30,9 +30,7 @@ def create_favourite(body: CreatePayloadPostRequest):
         if not user:
             response_object = {"status": "fail", "message": "User does not exist."}
             return (
-                make_response(
-                    FavouritesErrorResponse.parse_obj(response_object).dict()
-                ),
+                make_response(ErrorResponse.parse_obj(response_object).dict()),
                 404,
             )
 
@@ -44,9 +42,7 @@ def create_favourite(body: CreatePayloadPostRequest):
                 "message": f"This favourite already exists: {existing_favourite.id}",
             }
             return (
-                make_response(
-                    FavouritesErrorResponse.parse_obj(response_object).dict()
-                ),
+                make_response(ErrorResponse.parse_obj(response_object).dict()),
                 409,
             )
 
@@ -71,7 +67,7 @@ def create_favourite(body: CreatePayloadPostRequest):
             "message": "Some error occurred. Please try again.",
         }
         return (
-            make_response(FavouritesErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             401,
         )
 
@@ -91,7 +87,7 @@ def read_favourite(favourite_id: int):
             "message": f"Favourite does not exist: {favourite_id}",
         }
         return (
-            make_response(FavouritesErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             404,
         )
 
@@ -116,7 +112,7 @@ def update_favourite(favourite_id: int, body: UpdatePayloadPutRequest):
             "message": f"Favourite does not exist: {favourite_id}",
         }
         return (
-            make_response(FavouritesErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             404,
         )
 
@@ -148,7 +144,7 @@ def delete_favourite(favourite_id: int):
             "message": f"Favourite does not exist: {favourite_id}",
         }
         return (
-            make_response(FavouritesErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             404,
         )
 

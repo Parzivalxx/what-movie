@@ -1,4 +1,4 @@
-import { NavLink, Form, useNavigate, useSubmit } from "react-router-dom";
+import { NavLink, Form, useNavigate, useSubmit, Link } from "react-router-dom";
 
 import { tokenLoader } from "../utils/auth";
 import { useAuth } from "../hooks/Auth";
@@ -84,9 +84,9 @@ const AuthNavbar = () => {
             className="dropdown-menu dropdown-menu-end"
             aria-labelledby="navbarDropdown"
           >
-            <a className="dropdown-item" href="/#">
+            <Link className="dropdown-item" to="favourites">
               View favourites
-            </a>
+            </Link>
             <div className="dropdown-divider"></div>
             <Form onSubmit={logout} method="post">
               <button className="dropdown-item">Log out</button>

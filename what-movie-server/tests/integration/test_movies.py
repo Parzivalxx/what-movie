@@ -1,10 +1,6 @@
 import json
 
-from what_movie_server.schemas import (
-    ComingsoonGetRequest,
-    NowshowingGetRequest,
-    ShowtimesGetRequest,
-)
+from what_movie_server.schemas import ComingsoonGetRequest, NowshowingGetRequest, ShowtimesGetRequest, DetailsGetRequest
 from what_movie_server.app import app
 from tests.integration.base import BaseTestCase
 
@@ -32,6 +28,14 @@ def get_movies_showtimes(self, film_id: int, date: str, num_results: int):
     return self.client.get(
         "/movies/showtimes",
         query_string=ShowtimesGetRequest(film_id=film_id, date=date, n=num_results).dict(),
+        content_type="application/json",
+    )
+
+
+def get_movies_details(self, film_id: int):
+    return self.client.get(
+        "/movies/details",
+        query_string=DetailsGetRequest(film_id=film_id).dict(),
         content_type="application/json",
     )
 
@@ -113,6 +117,27 @@ class TestMoviesBlueprint(BaseTestCase):
         """Test for movie showtimes with invalid n"""
         with self.client:
             response = get_movies_showtimes(self, film_id=25, date="2023-01-01", num_results=-1)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data["status"] == "fail")
+            self.assertTrue(data["message"] == f"Request timed out, attempted {REQUEST_RETRIES} times")
+            self.assertEqual(response.status_code, 408)
+
+    def test_movies_details_all_valid(self):
+        """Test for movie details with valid params"""
+        with self.client:
+            response = get_movies_details(self, film_id=25)
+            if not response.data:
+                self.assertEqual(response.status_code, 204)
+            else:
+                data = json.loads(response.data.decode())
+                self.assertTrue(data["status"] == "success")
+                self.assertTrue(response.content_type == "application/json")
+                self.assertEqual(response.status_code, 200)
+
+    def test_movies_details_invalid_film_id(self):
+        """Test for movie details with invalid film_id"""
+        with self.client:
+            response = get_movies_details(self, film_id=-1)
             data = json.loads(response.data.decode())
             self.assertTrue(data["status"] == "fail")
             self.assertTrue(data["message"] == f"Request timed out, attempted {REQUEST_RETRIES} times")

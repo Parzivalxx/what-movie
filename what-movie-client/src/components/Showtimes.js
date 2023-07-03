@@ -42,7 +42,6 @@ const Showtimes = ({ showtimes, user }) => {
         );
       } else {
         const resData = await response.json();
-        console.log(resData);
         setFavourites(resData.data);
         setIsLoading(false);
       }
@@ -109,6 +108,10 @@ const Showtimes = ({ showtimes, user }) => {
                               {showtime.times.map((time, index) => {
                                 const matchingFavourite = favourites.find(
                                   (favourite) =>
+                                    new Date(
+                                      favourite.added_on
+                                    ).toLocaleDateString() ===
+                                      new Date().toLocaleDateString() &&
                                     favourite.cinema_type === cinemaType &&
                                     favourite.cinema_id === cinema.cinema_id &&
                                     favourite.start_time === time.start_time &&

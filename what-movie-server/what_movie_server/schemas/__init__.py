@@ -1,4 +1,3 @@
-from .auth.error.response.AuthErrorResponse import AuthErrorResponse
 from .auth.getstatus.request.GetstatusGetHeaders import GetstatusGetHeaders
 from .auth.getstatus.response.GetstatusSuccessGetResponse import (
     GetstatusSuccessGetResponse,
@@ -19,7 +18,6 @@ from .favourites.create.response.CreateSuccessPostResponse import (
 from .favourites.delete.response.DeleteSuccessDeleteResponse import (
     DeleteSuccessDeleteResponse,
 )
-from .favourites.error.response.FavouritesErrorResponse import FavouritesErrorResponse
 from .favourites.list.request.ListGetRequest import ListGetRequest
 from .favourites.list.response.ListSuccessGetResponse import ListSuccessGetResponse
 from .favourites.read.response.ReadSuccessGetResponse import ReadSuccessGetResponse
@@ -31,20 +29,24 @@ from .favourites.common.response.withdata.Favourite import Favourite
 
 from .movies.comingsoon.request.ComingsoonGetRequest import ComingsoonGetRequest
 from .movies.comingsoon.response.ComingsoonGetResponse import ComingsoonGetResponse
-from .movies.error.response.MoviesErrorResponse import MoviesErrorResponse
 from .movies.nowshowing.request.NowshowingGetRequest import NowshowingGetRequest
 from .movies.nowshowing.response.NowshowingGetResponse import NowshowingGetResponse
 from .movies.showtimes.request.ShowtimesGetRequest import ShowtimesGetRequest
 from .movies.showtimes.response.ShowtimesGetResponse import ShowtimesGetResponse
+from .movies.details.request.DetailsGetRequest import DetailsGetRequest
+from .movies.details.response.DetailsGetResponse import DetailsGetResponse
 
 from .users.read.response.ReadUserSuccessGetResponse import ReadUserSuccessGetResponse
 from .users.delete.response.DeleteUserSuccessDeleteResponse import DeleteUserSuccessDeleteResponse
 from .users.list.response.ListUsersSuccessGetResponse import ListUsersSuccessGetResponse
-from .users.error.response.UsersErrorResponse import UsersErrorResponse
 from .users.common.response.UserSchema import UserSchema
 
+from .cinemas.details.request.CinemaDetailsGetRequest import CinemaDetailsGetRequest
+from .cinemas.details.response.CinemaDetailsGetResponse import CinemaDetailsGetResponse
+
+from .common.error.response.ErrorResponse import ErrorResponse
+
 __all__ = [
-    "AuthErrorResponse",
     "GetstatusGetHeaders",
     "GetstatusSuccessGetResponse",
     "LoginPostRequest",
@@ -56,7 +58,6 @@ __all__ = [
     "CreatePayloadPostRequest",
     "CreateSuccessPostResponse",
     "DeleteSuccessDeleteResponse",
-    "FavouritesErrorResponse",
     "ListGetRequest",
     "ListSuccessGetResponse",
     "ReadSuccessGetResponse",
@@ -65,14 +66,17 @@ __all__ = [
     "Favourite",
     "ComingsoonGetRequest",
     "ComingsoonGetResponse",
-    "MoviesErrorResponse",
     "NowshowingGetRequest",
     "NowshowingGetResponse",
     "ShowtimesGetRequest",
     "ShowtimesGetResponse",
+    "DetailsGetRequest",
+    "DetailsGetResponse",
     "ReadUserSuccessGetResponse",
     "DeleteUserSuccessDeleteResponse",
     "ListUsersSuccessGetResponse",
-    "UsersErrorResponse",
     "UserSchema",
+    "CinemaDetailsGetRequest",
+    "CinemaDetailsGetResponse",
+    "ErrorResponse",
 ]

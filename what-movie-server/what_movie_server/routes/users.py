@@ -5,7 +5,7 @@ from what_movie_server.schemas import (
     ReadUserSuccessGetResponse,
     DeleteUserSuccessDeleteResponse,
     ListUsersSuccessGetResponse,
-    UsersErrorResponse,
+    ErrorResponse,
     UserSchema,
 )
 from what_movie_server.models import User
@@ -28,7 +28,7 @@ def read_user(email: str):
             "message": f"User does not exist: {email}",
         }
         return (
-            make_response(UsersErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             404,
         )
 
@@ -53,7 +53,7 @@ def delete_user(user_id: int):
             "message": f"User does not exist: {user_id}",
         }
         return (
-            make_response(UsersErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             404,
         )
 

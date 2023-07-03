@@ -7,7 +7,7 @@ from what_movie_server.models import (
     BlacklistToken,
 )
 from what_movie_server.schemas import (
-    AuthErrorResponse,
+    ErrorResponse,
     GetstatusGetHeaders,
     GetstatusSuccessGetResponse,
     LoginPostRequest,
@@ -52,7 +52,7 @@ def register(body: RegisterPostRequest):
                 "message": "Some error occurred. Please try again.",
             }
             return (
-                make_response(AuthErrorResponse.parse_obj(response_object).dict()),
+                make_response(ErrorResponse.parse_obj(response_object).dict()),
                 401,
             )
     else:
@@ -61,7 +61,7 @@ def register(body: RegisterPostRequest):
             "message": "User already exists. Please Log in.",
         }
         return (
-            make_response(AuthErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             409,
         )
 
@@ -90,14 +90,14 @@ def login(body: LoginPostRequest):
         else:
             response_object = {"status": "fail", "message": "User does not exist."}
             return (
-                make_response(AuthErrorResponse.parse_obj(response_object).dict()),
+                make_response(ErrorResponse.parse_obj(response_object).dict()),
                 404,
             )
     except Exception as e:
         app.logger.error(e)
         response_object = {"status": "fail", "message": "Try again"}
         return (
-            make_response(AuthErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             500,
         )
 
@@ -118,7 +118,7 @@ def get_status():
                 "message": "Bearer token malformed.",
             }
             return (
-                make_response(AuthErrorResponse.parse_obj(response_object).dict()),
+                make_response(ErrorResponse.parse_obj(response_object).dict()),
                 401,
             )
     else:
@@ -142,7 +142,7 @@ def get_status():
             )
         response_object = {"status": "fail", "message": resp}
         return (
-            make_response(AuthErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             401,
         )
     else:
@@ -151,7 +151,7 @@ def get_status():
             "message": "Provide a valid auth token.",
         }
         return (
-            make_response(AuthErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             401,
         )
 
@@ -187,13 +187,13 @@ def logout():
             except Exception as e:
                 response_object = {"status": "fail", "message": e}
                 return (
-                    make_response(AuthErrorResponse.parse_obj(response_object).dict()),
+                    make_response(ErrorResponse.parse_obj(response_object).dict()),
                     200,
                 )
         else:
             response_object = {"status": "fail", "message": resp}
             return (
-                make_response(AuthErrorResponse.parse_obj(response_object).dict()),
+                make_response(ErrorResponse.parse_obj(response_object).dict()),
                 401,
             )
     else:
@@ -202,6 +202,6 @@ def logout():
             "message": "Provide a valid auth token.",
         }
         return (
-            make_response(AuthErrorResponse.parse_obj(response_object).dict()),
+            make_response(ErrorResponse.parse_obj(response_object).dict()),
             403,
         )

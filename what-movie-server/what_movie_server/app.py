@@ -20,6 +20,7 @@ from what_movie_server.routes.auth import auth_blueprint  # noqa
 from what_movie_server.routes.movies import movies_blueprint  # noqa
 from what_movie_server.routes.favourites import favourites_blueprint  # noqa
 from what_movie_server.routes.users import users_blueprint  # noqa
+from what_movie_server.routes.cinemas import cinemas_blueprint  # noqa
 from what_movie_server.commands import register_cli_commands  # noqa
 
 register_cli_commands(app, db)
@@ -28,6 +29,7 @@ app.register_blueprint(auth_blueprint)
 app.register_blueprint(movies_blueprint)
 app.register_blueprint(favourites_blueprint)
 app.register_blueprint(users_blueprint)
+app.register_blueprint(cinemas_blueprint)
 
 if __name__ == "__main__":
     app.run()
