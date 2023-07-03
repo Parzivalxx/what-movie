@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from what_movie_server.app import db
 
 
@@ -17,6 +19,7 @@ class Favourites(db.Model):
     start_time = db.Column(db.String(10), nullable=False)
     end_time = db.Column(db.String(10), nullable=False)
     cinema_type = db.Column(db.String(10), nullable=False)
+    added_on = db.Column(db.DateTime, nullable=False)
 
     user = db.relationship(
         "User",
@@ -38,3 +41,4 @@ class Favourites(db.Model):
         self.start_time = start_time
         self.end_time = end_time
         self.cinema_type = cinema_type
+        self.added_on = datetime.now()

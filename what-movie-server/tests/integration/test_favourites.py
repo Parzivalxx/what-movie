@@ -186,7 +186,9 @@ class TestFavouritesBlueprint(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertTrue(data["status"] == "success")
         self.assertTrue(compare_sqlalchemy_objects(current_favourite, expected_favourite))
-        self.assertTrue(data["data"] == Favourite.from_orm(current_favourite).dict())
+        current_favourite = Favourite.from_orm(current_favourite).dict()
+        current_favourite["added_on"] = current_favourite["added_on"].strftime("%a, %d %b %Y %H:%M:%S GMT")
+        self.assertTrue(data["data"] == current_favourite)
         self.assertTrue(response.content_type == "application/json")
         self.assertEqual(response.status_code, 200)
 
@@ -239,7 +241,9 @@ class TestFavouritesBlueprint(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertTrue(compare_sqlalchemy_objects(current_favourite, expected_favourite))
         self.assertTrue(data["status"] == "success")
-        self.assertTrue(data["data"] == Favourite.from_orm(current_favourite).dict())
+        current_favourite = Favourite.from_orm(current_favourite).dict()
+        current_favourite["added_on"] = current_favourite["added_on"].strftime("%a, %d %b %Y %H:%M:%S GMT")
+        self.assertTrue(data["data"] == current_favourite)
         self.assertTrue(response.content_type == "application/json")
         self.assertEqual(response.status_code, 200)
 
@@ -324,13 +328,11 @@ class TestFavouritesBlueprint(BaseTestCase):
         response = list_favourites(self, user_id=1)
         data = json.loads(response.data.decode())
         self.assertTrue(data["status"] == "success")
-        self.assertTrue(
-            data["data"]
-            == [
-                Favourite.from_orm(favourite_1).dict(),
-                Favourite.from_orm(favourite_2).dict(),
-            ]
-        )
+        favourite_1 = Favourite.from_orm(favourite_1).dict()
+        favourite_2 = Favourite.from_orm(favourite_2).dict()
+        favourite_1["added_on"] = favourite_1["added_on"].strftime("%a, %d %b %Y %H:%M:%S GMT")
+        favourite_2["added_on"] = favourite_2["added_on"].strftime("%a, %d %b %Y %H:%M:%S GMT")
+        self.assertTrue(data["data"] == [favourite_1, favourite_2])
         self.assertTrue(response.content_type == "application/json")
         self.assertEqual(response.status_code, 200)
 

@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class Favourite(BaseModel):
@@ -9,6 +10,7 @@ class Favourite(BaseModel):
     start_time: str
     end_time: str
     cinema_type: str
+    added_on: datetime
 
     class Config:
         orm_mode = True

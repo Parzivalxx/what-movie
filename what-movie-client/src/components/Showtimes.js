@@ -21,6 +21,7 @@ const Showtimes = ({ showtimes, user }) => {
       if (!user) {
         setFavourites([]);
         setIsLoading(false);
+        return;
       }
       const params = {
         user_id: user.user_id,
@@ -121,7 +122,6 @@ const Showtimes = ({ showtimes, user }) => {
                                 return (
                                   <FavouriteButton
                                     key={`${cinema.cinema_id}-${index}`}
-                                    id={`${cinema.cinema_id}-${index}`}
                                     setShow={setShow}
                                     setData={setData}
                                     showtime={showtime}
