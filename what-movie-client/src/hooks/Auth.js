@@ -15,7 +15,6 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = tokenLoader();
-    console.log("TOKEN: " + token);
     if (!token || token === "EXPIRED") {
       setAuth(false);
       setUser(null);

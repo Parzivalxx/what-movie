@@ -86,7 +86,7 @@ const MovieDetailPage = () => {
           </div>
         )}
         <div className="mt-5 text-center">
-          <h4>Showtimes</h4>
+          <h4>Showtimes today</h4>
           <Suspense
             fallback={
               <p style={{ textAlign: "center", marginTop: 15 }}>Loading...</p>

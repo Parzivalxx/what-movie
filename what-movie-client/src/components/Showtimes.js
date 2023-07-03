@@ -1,18 +1,14 @@
 import { useState, useEffect } from "react";
-import { json, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
-import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
+import { json } from "react-router-dom";
 
-import { Accordion, Button, Alert } from "react-bootstrap";
+import { Accordion, Alert } from "react-bootstrap";
+import FavouriteButton from "./FavouriteButton";
 
 const Showtimes = ({ showtimes, user }) => {
   const [show, setShow] = useState(false);
   const [data, setData] = useState(null);
   const [favourites, setFavourites] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Run fetchData on initial page load
@@ -22,6 +18,10 @@ const Showtimes = ({ showtimes, user }) => {
   const fetchFavourites = async () => {
     setIsLoading(true);
     try {
+      if (!user) {
+        setFavourites([]);
+        setIsLoading(false);
+      }
       const params = {
         user_id: user.user_id,
       };
@@ -51,53 +51,6 @@ const Showtimes = ({ showtimes, user }) => {
     }
   };
 
-  const handleAddToFavourites = async (
-    cinemaType,
-    user,
-    showtime,
-    cinema,
-    time
-  ) => {
-    if (!user) {
-      return navigate("/auth?mode=login");
-    }
-    const payload = {
-      user_id: parseInt(user.user_id),
-      film_id: parseInt(showtime.film_id),
-      cinema_id: parseInt(cinema.cinema_id),
-      start_time: time.start_time,
-      end_time: time.end_time,
-      cinema_type: cinemaType,
-    };
-
-    try {
-      const response = await fetch("http://localhost:5000/favourites", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-      if (response.status === 422 || response.status === 401) {
-        return response;
-      }
-
-      const resData = await response.json();
-      console.log(resData);
-
-      if (resData.status === "fail") {
-        setShow(true);
-        setData(resData);
-        return;
-      }
-      setShow(true);
-      setData(resData);
-      return;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <div className="my-5">
       {isLoading ? (
@@ -116,7 +69,7 @@ const Showtimes = ({ showtimes, user }) => {
                     dismissible
                     variant="success"
                   >
-                    Favourite added successfully
+                    {data.message}
                   </Alert>
                 )) ||
                   (data.status === "fail" && (
@@ -153,8 +106,7 @@ const Showtimes = ({ showtimes, user }) => {
                               key={cinemaType}
                             >
                               {showtime.times.map((time, index) => {
-                                // Check if the showtime is a favorite
-                                const isFavourite = favourites.some(
+                                const matchingFavourite = favourites.find(
                                   (favourite) =>
                                     favourite.cinema_type === cinemaType &&
                                     favourite.cinema_id === cinema.cinema_id &&
@@ -162,34 +114,23 @@ const Showtimes = ({ showtimes, user }) => {
                                     favourite.end_time === time.end_time
                                 );
 
+                                const isFavourite = !!matchingFavourite;
+                                const favouriteId = isFavourite
+                                  ? matchingFavourite.id
+                                  : null;
                                 return (
-                                  <Button
-                                    key={index}
-                                    onClick={() =>
-                                      handleAddToFavourites(
-                                        cinemaType,
-                                        user,
-                                        showtime,
-                                        cinema,
-                                        time
-                                      )
-                                    }
-                                    className="mx-2 mb-2"
-                                    variant="light"
-                                  >
-                                    {time.start_time} - {time.end_time}
-                                    <FontAwesomeIcon
-                                      className="ms-2"
-                                      icon={
-                                        isFavourite
-                                          ? faHeartSolid
-                                          : faHeartRegular
-                                      }
-                                      style={{
-                                        color: "#ff0000",
-                                      }}
-                                    />
-                                  </Button>
+                                  <FavouriteButton
+                                    key={`${cinema.cinema_id}-${index}`}
+                                    id={`${cinema.cinema_id}-${index}`}
+                                    setShow={setShow}
+                                    setData={setData}
+                                    showtime={showtime}
+                                    user={user}
+                                    cinemaType={cinemaType}
+                                    cinema={cinema}
+                                    time={time}
+                                    initialFavouriteId={favouriteId}
+                                  />
                                 );
                               })}
                             </div>

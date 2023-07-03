@@ -16,6 +16,8 @@ const AuthNavbar = () => {
       submit(null, { action: "/logout", method: "post" });
       setAuth(false);
       setUser(null);
+      localStorage.removeItem("token");
+      localStorage.removeItem("expiration");
       return navigate("/");
     }
     const headers = {
@@ -29,14 +31,22 @@ const AuthNavbar = () => {
       });
 
       if (response.status === 422 || response.status === 401) {
-        return response;
+        setAuth(false);
+        setUser(null);
+        localStorage.removeItem("token");
+        localStorage.removeItem("expiration");
+        return navigate("/");
       }
 
       const resData = await response.json();
 
       if (resData.status === "fail") {
-        alert(resData.message);
-        return;
+        console.error(resData.message);
+        setAuth(false);
+        setUser(null);
+        localStorage.removeItem("token");
+        localStorage.removeItem("expiration");
+        return navigate("/");
       }
       localStorage.removeItem("token");
       localStorage.removeItem("expiration");
@@ -44,7 +54,11 @@ const AuthNavbar = () => {
       return navigate("/");
     } catch (error) {
       console.error(error);
-      return;
+      setAuth(false);
+      setUser(null);
+      localStorage.removeItem("token");
+      localStorage.removeItem("expiration");
+      return navigate("/");
     }
   };
 
