@@ -3,21 +3,10 @@ import { useNavigate } from "react-router-dom";
 const MoviesList = ({ movies }) => {
   const navigate = useNavigate();
 
-  const handleButtonClick = (movie) => {
-    const state = {
-      ageRating: movie.age_rating,
-      filmName: movie.film_name,
-      filmTrailer: movie.film_trailer,
-      poster:
-        movie.images.poster[1] && movie.images.poster[1].medium.film_image,
-      titleId: movie.imdb_title_id,
-      releaseDate:
-        movie.release_dates[0] && movie.release_dates[0].release_date,
-      synopsisLong: movie.synopsis_long,
-    };
-
-    navigate(`/movies/${movie.film_id}`, { state });
+  const handleButtonClick = (filmId) => {
+    navigate(`/movies/${filmId}`);
   };
+
   return (
     <div className="container mt-5 ps-5 pe-5">
       <div className="card-deck row justify-content-center">
@@ -42,7 +31,7 @@ const MoviesList = ({ movies }) => {
                 <button
                   type="button"
                   className="btn btn-primary btn-sm btn-block"
-                  onClick={() => handleButtonClick(movie)}
+                  onClick={() => handleButtonClick(movie.film_id)}
                 >
                   View more info
                 </button>

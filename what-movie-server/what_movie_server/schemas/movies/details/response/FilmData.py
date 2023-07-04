@@ -24,8 +24,8 @@ class FilmData(BaseModel):
     version_type: str
     images: Optional[Images]
     synopsis_long: str
-    distributor_id: int
-    distributor: str
+    distributor_id: Optional[int]
+    distributor: Optional[str]
     release_dates: List[ReleaseDate]
     age_rating: List[AgeRating]
     duration_mins: int

@@ -39,6 +39,10 @@ const FavouritesPage = () => {
         );
       } else {
         const resData = await response.json();
+        if (resData.status === "fail") {
+          console.error(resData.message);
+          return;
+        }
         console.log(resData.data);
         setFavourites(resData.data);
         setIsLoading(false);
@@ -81,7 +85,7 @@ const FavouritesPage = () => {
       <h4>My Favourites</h4>
       <div className="my-5 container col-lg-10 justify-content-center">
         {isLoading ? (
-          <div style={{ textAlign: "center", marginTop: 15 }}>Loading...</div>
+          <div className="text-center mt-5">Loading...</div>
         ) : (
           <div>
             <FavouritesTable favourites={favourites} onDelete={handleDelete} />

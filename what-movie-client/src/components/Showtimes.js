@@ -3,17 +3,21 @@ import { json } from "react-router-dom";
 
 import { Accordion, Alert } from "react-bootstrap";
 import FavouriteButton from "./FavouriteButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 const Showtimes = ({ showtimes, user }) => {
   const [show, setShow] = useState(false);
   const [data, setData] = useState(null);
   const [favourites, setFavourites] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [cinemaData, setCinemaData] = useState([]);
 
   useEffect(() => {
     // Run fetchData on initial page load
-    fetchFavourites();
-  }, [user]); // Empty dependency array ensures it runs only once on initial load
+    fetchFavourites(user);
+    fetchCinemaData(showtimes);
+  }, [user, showtimes]); // Empty dependency array ensures it runs only once on initial load
 
   const fetchFavourites = async () => {
     setIsLoading(true);
@@ -51,6 +55,54 @@ const Showtimes = ({ showtimes, user }) => {
     }
   };
 
+  const fetchCinemaData = async () => {
+    setIsLoading(true);
+    try {
+      const cinemaDataFromAPI = await Promise.all(
+        showtimes.map(async (cinema) => {
+          const params = {
+            cinema_id: cinema.cinema_id,
+          };
+          const queryString = new URLSearchParams(params).toString();
+          const response = await fetch(
+            `http://localhost:5000/cinemas/details?${queryString}`,
+            {
+              method: "GET",
+            }
+          );
+          if (!response.ok) {
+            throw json(
+              { message: "Could not fetch cinema data" },
+              {
+                status: 500,
+              }
+            );
+          } else {
+            const resData = await response.json();
+            if (resData.status === "fail") {
+              console.error(resData.message);
+              return;
+            }
+            return {
+              ...cinema,
+              detailedCinemaData: resData.data,
+            };
+          }
+        })
+      );
+      console.log(cinemaDataFromAPI);
+      setCinemaData(cinemaDataFromAPI);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  };
+
+  const formatButtonText = (cinemaName, distance) => {
+    return `${cinemaName} (${(distance * 1.609344).toFixed(1)}km away)`;
+  };
+
   return (
     <div className="my-5">
       {isLoading ? (
@@ -83,18 +135,36 @@ const Showtimes = ({ showtimes, user }) => {
                     </Alert>
                   )))}
               <Accordion defaultActiveKey={showtimes[0].cinema_id.toString()}>
-                {showtimes.map((cinema) => (
+                {cinemaData.map((cinema) => (
                   <Accordion.Item
                     key={cinema.cinema_id.toString()}
                     eventKey={cinema.cinema_id.toString()}
                   >
-                    <Accordion.Header>
-                      <span className="d-inline-block col-5 text-start">
-                        {cinema.cinema_name}
-                      </span>
-                      <span className="d-inline-block col-5 text-start">
-                        Distance: {(cinema.distance * 1.609344).toFixed(1)}km
-                      </span>
+                    <Accordion.Header className="d-flex justify-content-center">
+                      <div className="w-100 text-center">
+                        <a
+                          href={`https://maps.google.com/maps?q=${cinema.detailedCinemaData.lat},${cinema.detailedCinemaData.lng}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-sm btn-block border text-center"
+                            onClick={(event) => event.stopPropagation()}
+                          >
+                            <h6>
+                              {formatButtonText(
+                                cinema.cinema_name,
+                                cinema.distance
+                              )}
+                              <FontAwesomeIcon
+                                className="ps-2"
+                                icon={faLocationDot}
+                              />
+                            </h6>
+                          </button>
+                        </a>
+                      </div>
                     </Accordion.Header>
                     <Accordion.Body>
                       {Object.entries(cinema.showings).map(

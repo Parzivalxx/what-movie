@@ -35,6 +35,10 @@ const MoviesPage = () => {
         );
       } else {
         const resData = await response.json();
+        if (resData.status === "fail") {
+          console.error(resData.message);
+          return;
+        }
         console.log(resData.data.films);
         setMoviesData(resData.data.films);
         setIsLoading(false);
@@ -47,7 +51,7 @@ const MoviesPage = () => {
 
   return (
     <>
-      <ul className="nav nav-pills justify-content-center">
+      <ul className="mt-4 nav nav-pills justify-content-center">
         <li className="nav-item">
           <button
             id="nowshowing"
@@ -72,7 +76,7 @@ const MoviesPage = () => {
         </li>
       </ul>
       {isLoading ? (
-        <div style={{ textAlign: "center", marginTop: 15 }}>Loading...</div>
+        <div className="text-center mt-5">Loading...</div>
       ) : (
         <MoviesList movies={moviesData} />
       )}
