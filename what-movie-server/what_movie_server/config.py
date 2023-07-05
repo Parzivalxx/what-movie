@@ -22,7 +22,8 @@ class BaseConfig:
     REQUEST_RETRIES = 3
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BASE_MOVIEGLU_URL = "https://api-gate2.movieglu.com/"
-    TOKEN_EXPIRATION_TIME = 3600
+    TOKEN_EXPIRATION_TIME = 30 * 60 * 60 * 24
+    TIMEZONE = "UTC"
 
 
 class DevelopmentConfig(BaseConfig):
@@ -39,7 +40,7 @@ class TestingConfig(BaseConfig):
     DEBUG = True
     TESTING = True
     BCRYPT_LOG_ROUNDS = 4
-    SQLALCHEMY_DATABASE_URI = f"{postgres_local_base}{database_name}_test"
+    SQLALCHEMY_DATABASE_URI = f"{postgres_local_base}{database_name}"
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     TOKEN_EXPIRATION_TIME = 5
 

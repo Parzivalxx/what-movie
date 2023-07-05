@@ -1,4 +1,5 @@
 import os
+import pytz
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
@@ -11,6 +12,7 @@ CORS(app, supports_credentials=True)
 
 app_settings = os.getenv("APP_SETTINGS", "what_movie_server.config.DevelopmentConfig")
 app.config.from_object(app_settings)
+timezone = pytz.timezone(app.config["TIMEZONE"])
 
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)

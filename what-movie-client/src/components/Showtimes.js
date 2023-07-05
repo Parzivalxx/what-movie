@@ -90,7 +90,6 @@ const Showtimes = ({ showtimes, user }) => {
           }
         })
       );
-      console.log(cinemaDataFromAPI);
       setCinemaData(cinemaDataFromAPI);
       setIsLoading(false);
     } catch (error) {
@@ -149,7 +148,7 @@ const Showtimes = ({ showtimes, user }) => {
                         >
                           <button
                             type="button"
-                            className="btn btn-primary btn-sm btn-block border text-center"
+                            className="btn btn-light btn-sm btn-block border text-center"
                             onClick={(event) => event.stopPropagation()}
                           >
                             <h6>

@@ -1,6 +1,7 @@
 from datetime import datetime
+import pytz
 
-from what_movie_server.app import db
+from what_movie_server.app import db, timezone
 
 
 class Favourites(db.Model):
@@ -41,4 +42,4 @@ class Favourites(db.Model):
         self.start_time = start_time
         self.end_time = end_time
         self.cinema_type = cinema_type
-        self.added_on = datetime.now()
+        self.added_on = datetime.now(pytz.utc).astimezone(timezone)

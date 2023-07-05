@@ -39,7 +39,6 @@ const MoviesPage = () => {
           console.error(resData.message);
           return;
         }
-        console.log(resData.data.films);
         setMoviesData(resData.data.films);
         setIsLoading(false);
       }

@@ -171,10 +171,7 @@ const MovieDetailPage = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <button
-                      type="button"
-                      className="my-5 pt-2 btn btn-primary btn-sm btn-block border w-100 text-center"
-                    >
+                    <button className="my-5 pt-2 btn btn-primary btn-sm btn-block border w-100 text-center">
                       <h5>
                         View more info on IMDB
                         <FontAwesomeIcon
@@ -259,7 +256,6 @@ const loadShowtimes = async (id) => {
       console.error(resData.message);
       return;
     }
-    console.log(resData.data.cinemas);
     return resData.data.cinemas;
   }
 };

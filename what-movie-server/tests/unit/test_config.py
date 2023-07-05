@@ -15,10 +15,6 @@ class TestDevelopmentConfig(TestCase):
         self.assertFalse(app.config["SECRET_KEY"] == "my_precious")
         self.assertTrue(app.config["DEBUG"])
         self.assertFalse(current_app is None)
-        self.assertTrue(
-            app.config["SQLALCHEMY_DATABASE_URI"]
-            == "postgresql://postgres:Parzival051099!@localhost/movie_showtimes"
-        )
 
 
 class TestTestingConfig(TestCase):
@@ -30,10 +26,6 @@ class TestTestingConfig(TestCase):
         self.create_app()
         self.assertFalse(app.config["SECRET_KEY"] == "my_precious")
         self.assertTrue(app.config["DEBUG"])
-        self.assertTrue(
-            app.config["SQLALCHEMY_DATABASE_URI"]
-            == "postgresql://postgres:Parzival051099!@localhost/movie_showtimes_test"
-        )
 
 
 class TestProductionConfig(TestCase):

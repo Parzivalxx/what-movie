@@ -1,8 +1,9 @@
 import jwt
 import datetime
+import pytz
 
 from what_movie_server.models.BlacklistToken import BlacklistToken
-from what_movie_server.app import app, db, bcrypt
+from what_movie_server.app import app, db, bcrypt, timezone
 
 
 class User(db.Model):
@@ -21,7 +22,7 @@ class User(db.Model):
     def __init__(self, email, password, admin=False):
         self.email = email
         self.password = bcrypt.generate_password_hash(password, app.config.get("BCRYPT_LOG_ROUNDS")).decode()
-        self.added_on = datetime.datetime.now()
+        self.added_on = datetime.datetime.now(pytz.utc).astimezone(timezone)
         self.admin = admin
 
     def encode_auth_token(self, user_id):
@@ -30,9 +31,10 @@ class User(db.Model):
         :return: string
         """
         try:
+            now = datetime.datetime.now(pytz.utc).astimezone(timezone)
             payload = {
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=app.config["TOKEN_EXPIRATION_TIME"]),
-                "iat": datetime.datetime.utcnow(),
+                "exp": now + datetime.timedelta(seconds=app.config["TOKEN_EXPIRATION_TIME"]),
+                "iat": now,
                 "sub": user_id,
             }
             return jwt.encode(payload, app.config.get("SECRET_KEY"), algorithm="HS256")

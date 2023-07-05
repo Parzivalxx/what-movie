@@ -7,7 +7,6 @@ const FavouritesPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [favourites, setFavourites] = useState([]);
   const { user } = useAuth();
-  console.log(user);
 
   useEffect(() => {
     // Run fetchData on initial page load
@@ -43,13 +42,87 @@ const FavouritesPage = () => {
           console.error(resData.message);
           return;
         }
-        console.log(resData.data);
-        setFavourites(resData.data);
+        const favouritesWithDetails = await Promise.all(
+          resData.data.map(async (favourite) => {
+            const movieDetails = await fetchMovieDetails(favourite.film_id);
+            const cinemaDetails = await fetchCinemaDetails(favourite.cinema_id);
+            return {
+              ...favourite,
+              movieDetail: movieDetails,
+              cinemaDetail: cinemaDetails,
+            };
+          })
+        );
+        favouritesWithDetails.sort((a, b) => {
+          const dateA = new Date(a.added_on);
+          const dateB = new Date(b.added_on);
+          if (dateB.toLocaleDateString() !== dateA.toLocaleDateString()) {
+            return dateB - dateA;
+          }
+          if (b.film_id !== a.film_id) {
+            return b.film_id - a.film_id;
+          }
+          if (b.start_time !== a.start_time) {
+            return a.start_time.localeCompare(b.start_time);
+          }
+          return a.end_time.localeCompare(b.end_time);
+        });
+        setFavourites(favouritesWithDetails);
         setIsLoading(false);
       }
     } catch (error) {
       console.error(error);
       return;
+    }
+  };
+
+  const fetchMovieDetails = async (movieId) => {
+    const params = {
+      film_id: movieId,
+    };
+    const queryString = new URLSearchParams(params).toString();
+    const response = await fetch(
+      `http://localhost:5000/movies/details?${queryString}`
+    );
+    if (!response.ok) {
+      throw json(
+        { message: "Could not fetch movie details" },
+        {
+          status: 500,
+        }
+      );
+    } else {
+      const resData = await response.json();
+      if (resData.status === "fail") {
+        console.error(resData.message);
+        return;
+      }
+      return resData.data;
+    }
+  };
+
+  const fetchCinemaDetails = async (cinemaId) => {
+    const params = {
+      cinema_id: cinemaId,
+    };
+    const queryString = new URLSearchParams(params).toString();
+    const response = await fetch(
+      `http://localhost:5000/cinemas/details?${queryString}`
+    );
+    if (!response.ok) {
+      throw json(
+        { message: "Could not fetch cinema details" },
+        {
+          status: 500,
+        }
+      );
+    } else {
+      const resData = await response.json();
+      if (resData.status === "fail") {
+        console.error(resData.message);
+        return;
+      }
+      return resData.data;
     }
   };
 

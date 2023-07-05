@@ -4,8 +4,10 @@ import {
   useNavigation,
   useActionData,
   useNavigate,
+  json,
 } from "react-router-dom";
-import { json } from "react-router-dom";
+import { useState } from "react";
+import { Alert } from "react-bootstrap";
 
 import "../css/AuthForm.css";
 import { useAuth } from "../hooks/Auth";
@@ -16,6 +18,7 @@ const AuthForm = () => {
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
+  const [error, setError] = useState(null);
   const isLogin = searchParams.get("mode") === "login";
   const isSubmitting = navigation.state === "submitting";
   const { setAuth } = useAuth();
@@ -52,7 +55,7 @@ const AuthForm = () => {
       const resData = await response.json();
 
       if (resData.status === "fail") {
-        alert(resData.message);
+        setError(resData.message);
         return;
       }
 
@@ -70,6 +73,17 @@ const AuthForm = () => {
 
   return (
     <>
+      {error && (
+        <Alert
+          className="form"
+          key="danger"
+          onClose={() => setError(null)}
+          dismissible
+          variant="danger"
+        >
+          {error}
+        </Alert>
+      )}
       <Form method="post" onSubmit={login} className="form">
         <h1>{isLogin ? "Log in" : "Sign up"}</h1>
         {data && data.errors && (
@@ -80,7 +94,7 @@ const AuthForm = () => {
           </ul>
         )}
         {data && data.message && <p>{data.message}</p>}
-        <p>
+        <p className="my-4">
           <label htmlFor="email">Email</label>
           <input id="email" type="email" name="email" required />
         </p>
@@ -88,8 +102,11 @@ const AuthForm = () => {
           <label htmlFor="image">Password</label>
           <input id="password" type="password" name="password" required />
         </p>
-        <div className="float-end">
-          <button disabled={isSubmitting}>
+        <div>
+          <button
+            className="btn btn-primary mt-4 w-100"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Submitting..." : "Submit"}
           </button>
         </div>

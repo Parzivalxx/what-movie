@@ -1,7 +1,7 @@
-import jwt
 import datetime
+import pytz
 
-from what_movie_server.app import db
+from what_movie_server.app import db, timezone
 
 
 class BlacklistToken(db.Model):
@@ -17,7 +17,7 @@ class BlacklistToken(db.Model):
 
     def __init__(self, token):
         self.token = token
-        self.blacklisted_on = datetime.datetime.now()
+        self.blacklisted_on = datetime.datetime.now(pytz.utc).astimezone(timezone)
 
     def __repr__(self):
         return f"token: {self.token}"
