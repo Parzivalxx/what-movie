@@ -63,7 +63,7 @@ const AuthForm = () => {
 
       localStorage.setItem("token", resData.auth_token);
       const expiration = new Date();
-      expiration.setSeconds(expiration.getSeconds() + 36000);
+      expiration.setSeconds(expiration.getSeconds() + 30 * 60 * 60 * 24);
       localStorage.setItem("expiration", expiration.toISOString());
       return navigate("/");
     } catch (error) {
