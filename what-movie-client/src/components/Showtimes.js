@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { json } from "react-router-dom";
 
 import { Accordion, Alert } from "react-bootstrap";
 import FavouriteButton from "./FavouriteButton";
@@ -38,12 +37,10 @@ const Showtimes = ({ showtimes, user }) => {
         }
       );
       if (!response.ok) {
-        throw json(
-          { message: "Could not fetch favourites" },
-          {
-            status: 500,
-          }
-        );
+        throw JSON.stringify({
+          message: "Could not fetch favourites",
+          status: 500,
+        });
       } else {
         const resData = await response.json();
         setFavourites(resData.data);
@@ -71,12 +68,10 @@ const Showtimes = ({ showtimes, user }) => {
             }
           );
           if (!response.ok) {
-            throw json(
-              { message: "Could not fetch cinema data" },
-              {
-                status: 500,
-              }
-            );
+            throw JSON.stringify({
+              message: "Could not fetch cinema data",
+              status: 500,
+            });
           } else {
             const resData = await response.json();
             if (resData.status === "fail") {

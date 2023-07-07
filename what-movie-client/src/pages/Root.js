@@ -19,6 +19,7 @@ const RootLayout = () => {
     }
 
     if (token === "EXPIRED") {
+      console.log("HERE");
       submit(null, { action: "/logout", method: "post" });
       alert("Token expired, please sign in again");
       setAuth(false);
@@ -28,14 +29,7 @@ const RootLayout = () => {
 
     const tokenDuration = getTokenDuration();
     console.log(tokenDuration);
-
-    setTimeout(() => {
-      submit(null, { action: "/logout", method: "post" });
-      alert("Token expired, please sign in again");
-      setAuth(false);
-      setUser(null);
-    }, tokenDuration);
-  }, [token, submit, setAuth, setUser]);
+  }, [setAuth, setUser]);
 
   return (
     <>

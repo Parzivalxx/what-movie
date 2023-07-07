@@ -1,5 +1,7 @@
 # client
 what-movie-client/node_modules
+node_modules
+pgdata
 
 # server
 **pycache**

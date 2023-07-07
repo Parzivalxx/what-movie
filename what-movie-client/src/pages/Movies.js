@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { json } from "react-router-dom";
 
 import "../css/MoviesNavigation.css";
 import MoviesList from "../components/MoviesList";
@@ -27,12 +26,10 @@ const MoviesPage = () => {
         // body: JSON.stringify({ n: 10 }),
       });
       if (!response.ok) {
-        throw json(
-          { message: "Could not fetch now showing movies." },
-          {
-            status: 500,
-          }
-        );
+        throw JSON.stringify({
+          message: "Could not fetch now showing movies.",
+          status: 500,
+        });
       } else {
         const resData = await response.json();
         if (resData.status === "fail") {

@@ -1,14 +1,12 @@
 import os
-from dotenv import load_dotenv
 
 environment = os.getenv("ENVIRONMENT", "dev")
-if environment == "dev":
-    load_dotenv()
-db_user = os.getenv("DB_USER")
-db_password = os.getenv("DB_PASSWORD")
+db_user = os.getenv("POSTGRES_USER")
+db_password = os.getenv("POSTGRES_PASSWORD")
 basedir = os.path.abspath(os.path.dirname(__file__))
-postgres_local_base = f"postgresql://{db_user}:{db_password}@localhost/"
-database_name = "movie_showtimes"
+uri = "database" if environment == "prod" else "localhost"
+postgres_local_base = f"postgresql://{db_user}:{db_password}@{uri}/"
+database_name = os.getenv("POSTGRES_DB")
 
 
 class BaseConfig:

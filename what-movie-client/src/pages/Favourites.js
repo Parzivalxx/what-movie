@@ -1,4 +1,4 @@
-import { json, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAuth } from "../hooks/Auth";
 import FavouritesTable from "../components/FavouritesTable";
@@ -30,12 +30,10 @@ const FavouritesPage = () => {
         }
       );
       if (!response.ok) {
-        throw json(
-          { message: "Could not fetch favourites" },
-          {
-            status: 500,
-          }
-        );
+        throw JSON.stringify({
+          message: "Could not fetch favourites",
+          status: 500,
+        });
       } else {
         const resData = await response.json();
         if (resData.status === "fail") {
@@ -85,12 +83,10 @@ const FavouritesPage = () => {
       `http://localhost:5000/movies/details?${queryString}`
     );
     if (!response.ok) {
-      throw json(
-        { message: "Could not fetch movie details" },
-        {
-          status: 500,
-        }
-      );
+      throw JSON.stringify({
+        message: "Could not fetch movie details",
+        status: 500,
+      });
     } else {
       const resData = await response.json();
       if (resData.status === "fail") {
@@ -110,12 +106,10 @@ const FavouritesPage = () => {
       `http://localhost:5000/cinemas/details?${queryString}`
     );
     if (!response.ok) {
-      throw json(
-        { message: "Could not fetch cinema details" },
-        {
-          status: 500,
-        }
-      );
+      throw JSON.stringify({
+        message: "Could not fetch cinema details",
+        status: 500,
+      });
     } else {
       const resData = await response.json();
       if (resData.status === "fail") {

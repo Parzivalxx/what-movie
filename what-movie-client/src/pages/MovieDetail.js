@@ -1,5 +1,5 @@
 import { Suspense, useState, useEffect } from "react";
-import { useRouteLoaderData, json, defer, Await } from "react-router-dom";
+import { useRouteLoaderData, defer, Await } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUpRightFromSquare,
@@ -41,12 +41,10 @@ const MovieDetailPage = () => {
         }
       );
       if (!response.ok) {
-        throw json(
-          { message: "Could not fetch details" },
-          {
-            status: 500,
-          }
-        );
+        throw JSON.stringify({
+          message: "Could not fetch details",
+          status: 500,
+        });
       } else {
         const resData = await response.json();
         if (resData.status === "fail") {
@@ -241,12 +239,10 @@ const loadShowtimes = async (id) => {
   );
 
   if (!response.ok) {
-    throw json(
-      { message: "Could not fetch details for selected movie." },
-      {
-        status: 500,
-      }
-    );
+    throw JSON.stringify({
+      message: "Could not fetch details for selected movie.",
+      status: 500,
+    });
   } else {
     if (response.status === 204) {
       return [];

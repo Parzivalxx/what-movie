@@ -4,7 +4,6 @@ import {
   useNavigation,
   useActionData,
   useNavigate,
-  json,
 } from "react-router-dom";
 import { useState } from "react";
 import { Alert } from "react-bootstrap";
@@ -30,7 +29,7 @@ const AuthForm = () => {
     const mode = searchParams.get("mode") || "login";
 
     if (mode !== "login" && mode !== "register") {
-      throw json({ message: "Unsupported mode." }, { status: 422 });
+      throw JSON.stringify({ message: "Unsupported mode.", status: 422 });
     }
 
     const data = new FormData(e.target);
