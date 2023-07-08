@@ -12,7 +12,7 @@ class BaseConfig:
 
     SECRET_KEY = os.getenv("SECRET_KEY", "my_precious")
     API_KEY = os.getenv("API_KEY", "")
-    AUTHORIZATION = os.getenv("AUTHORIZATION", "")
+    AUTHORIZATION = f"Basic {os.getenv('AUTHORIZATION', '')}"
     DEBUG = False
     BCRYPT_LOG_ROUNDS = 13
     REQUEST_RETRIES = 3
