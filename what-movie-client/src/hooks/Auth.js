@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
+
 import { tokenLoader } from "../utils/auth";
+import apiUrl from "../config";
 
 const AuthContext = createContext({
   auth: null,
@@ -26,7 +28,7 @@ const AuthProvider = ({ children }) => {
     };
     const isAuth = async () => {
       try {
-        const res = await fetch("http://localhost:5000/auth/status", {
+        const res = await fetch(`${apiUrl}/auth/status`, {
           method: "GET",
           headers: headers,
         });

@@ -3,6 +3,7 @@ import { NavLink, Form, useNavigate, useSubmit, Link } from "react-router-dom";
 import { tokenLoader } from "../utils/auth";
 import { useAuth } from "../hooks/Auth";
 import "../css/Navbar.css";
+import apiUrl from "../config";
 
 const AuthNavbar = () => {
   const { setAuth, user, setUser } = useAuth();
@@ -25,7 +26,7 @@ const AuthNavbar = () => {
       withCredentials: true,
     };
     try {
-      const response = await fetch("http://localhost:5000/auth/logout", {
+      const response = await fetch(`${apiUrl}/auth/logout`, {
         method: "POST",
         headers: headers,
       });

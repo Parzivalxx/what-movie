@@ -10,6 +10,7 @@ import { Alert } from "react-bootstrap";
 
 import "../css/AuthForm.css";
 import { useAuth } from "../hooks/Auth";
+import apiUrl from "../config";
 
 const AuthForm = () => {
   const data = useActionData();
@@ -42,7 +43,7 @@ const AuthForm = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/auth/" + mode, {
+      const response = await fetch(`${apiUrl}/auth/` + mode, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(authData),

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import "../css/MoviesNavigation.css";
 import MoviesList from "../components/MoviesList";
+import apiUrl from "../config";
 
 const MoviesPage = () => {
   const [activeButton, setActiveButton] = useState("nowshowing");
@@ -21,7 +22,7 @@ const MoviesPage = () => {
   const loadMovies = async (buttonId) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:5000/movies/${buttonId}`, {
+      const response = await fetch(`${apiUrl}/movies/${buttonId}`, {
         method: "GET",
         // body: JSON.stringify({ n: 10 }),
       });

@@ -14,6 +14,7 @@ import {
 import Showtimes from "../components/Showtimes";
 import "../css/MovieDetail.css";
 import { useAuth } from "../hooks/Auth";
+import apiUrl from "../config";
 
 const MovieDetailPage = () => {
   const { showtimes } = useRouteLoaderData("movie-showtimes");
@@ -34,12 +35,9 @@ const MovieDetailPage = () => {
         film_id: film_id,
       };
       const queryString = new URLSearchParams(params).toString();
-      const response = await fetch(
-        `http://localhost:5000/movies/details?${queryString}`,
-        {
-          method: "GET",
-        }
-      );
+      const response = await fetch(`${apiUrl}/movies/details?${queryString}`, {
+        method: "GET",
+      });
       if (!response.ok) {
         throw JSON.stringify({
           message: "Could not fetch details",
@@ -231,12 +229,9 @@ const loadShowtimes = async (id) => {
   };
   const queryString = new URLSearchParams(params).toString();
   // console.log(id);
-  const response = await fetch(
-    `http://localhost:5000/movies/showtimes?${queryString}`,
-    {
-      method: "GET",
-    }
-  );
+  const response = await fetch(`${apiUrl}/movies/showtimes?${queryString}`, {
+    method: "GET",
+  });
 
   if (!response.ok) {
     throw JSON.stringify({

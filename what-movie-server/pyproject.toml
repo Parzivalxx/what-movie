@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "what_movie_server"}]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.11"
 flask-cors = "^3.0.10"
 flask-sqlalchemy = "^3.0.3"
 flask-bcrypt = "^1.0.1"

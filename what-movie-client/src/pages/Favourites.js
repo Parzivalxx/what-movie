@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useAuth } from "../hooks/Auth";
 import FavouritesTable from "../components/FavouritesTable";
+import apiUrl from "../config";
 
 const FavouritesPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,12 +24,9 @@ const FavouritesPage = () => {
         user_id: user.user_id,
       };
       const queryString = new URLSearchParams(params).toString();
-      const response = await fetch(
-        `http://localhost:5000/favourites?${queryString}`,
-        {
-          method: "GET",
-        }
-      );
+      const response = await fetch(`${apiUrl}/favourites?${queryString}`, {
+        method: "GET",
+      });
       if (!response.ok) {
         throw JSON.stringify({
           message: "Could not fetch favourites",
@@ -79,9 +77,7 @@ const FavouritesPage = () => {
       film_id: movieId,
     };
     const queryString = new URLSearchParams(params).toString();
-    const response = await fetch(
-      `http://localhost:5000/movies/details?${queryString}`
-    );
+    const response = await fetch(`${apiUrl}/movies/details?${queryString}`);
     if (!response.ok) {
       throw JSON.stringify({
         message: "Could not fetch movie details",
@@ -102,9 +98,7 @@ const FavouritesPage = () => {
       cinema_id: cinemaId,
     };
     const queryString = new URLSearchParams(params).toString();
-    const response = await fetch(
-      `http://localhost:5000/cinemas/details?${queryString}`
-    );
+    const response = await fetch(`${apiUrl}/cinemas/details?${queryString}`);
     if (!response.ok) {
       throw JSON.stringify({
         message: "Could not fetch cinema details",
@@ -138,7 +132,7 @@ const FavouritesPage = () => {
   const deleteFavourite = (id) => {
     // Implement your API delete request logic here
     // Return a Promise that resolves when the delete operation is successful
-    return fetch(`http://localhost:5000/favourites/${id}`, {
+    return fetch(`${apiUrl}/favourites/${id}`, {
       method: "DELETE",
     }).then((response) => {
       if (!response.ok) {

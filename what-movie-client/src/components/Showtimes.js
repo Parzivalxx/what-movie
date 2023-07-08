@@ -5,6 +5,8 @@ import FavouriteButton from "./FavouriteButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
+import apiUrl from "../config";
+
 const Showtimes = ({ showtimes, user }) => {
   const [show, setShow] = useState(false);
   const [data, setData] = useState(null);
@@ -30,12 +32,9 @@ const Showtimes = ({ showtimes, user }) => {
         user_id: user.user_id,
       };
       const queryString = new URLSearchParams(params).toString();
-      const response = await fetch(
-        `http://localhost:5000/favourites?${queryString}`,
-        {
-          method: "GET",
-        }
-      );
+      const response = await fetch(`${apiUrl}/favourites?${queryString}`, {
+        method: "GET",
+      });
       if (!response.ok) {
         throw JSON.stringify({
           message: "Could not fetch favourites",
@@ -62,7 +61,7 @@ const Showtimes = ({ showtimes, user }) => {
           };
           const queryString = new URLSearchParams(params).toString();
           const response = await fetch(
-            `http://localhost:5000/cinemas/details?${queryString}`,
+            `${apiUrl}/cinemas/details?${queryString}`,
             {
               method: "GET",
             }

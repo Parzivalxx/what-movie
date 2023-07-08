@@ -5,6 +5,8 @@ import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 
+import apiUrl from "../config";
+
 const FavouriteButton = ({
   buttonKey,
   setShow,
@@ -35,12 +37,9 @@ const FavouriteButton = ({
 
     if (favouriteId) {
       try {
-        const response = await fetch(
-          `http://localhost:5000/favourites/${favouriteId}`,
-          {
-            method: "DELETE",
-          }
-        );
+        const response = await fetch(`${apiUrl}/favourites/${favouriteId}`, {
+          method: "DELETE",
+        });
         if (response.status === 422 || response.status === 401) {
           return response;
         }
@@ -69,7 +68,7 @@ const FavouriteButton = ({
       };
 
       try {
-        const response = await fetch("http://localhost:5000/favourites", {
+        const response = await fetch(`${apiUrl}/favourites`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
