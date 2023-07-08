@@ -1,5 +1,6 @@
 import os
 import pytz
+import sqlalchemy as sa
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
@@ -34,4 +35,14 @@ app.register_blueprint(users_blueprint)
 app.register_blueprint(cinemas_blueprint)
 
 if __name__ == "__main__":
+    # Check if the database needs to be initialized
+    engine = sa.create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
+    inspector = sa.inspect(engine)
+    if not inspector.has_table("users"):
+        with app.app_context():
+            db.drop_all()
+            db.create_all()
+            app.logger.info("Initialized the database!")
+    else:
+        app.logger.info("Database already contains the users table.")
     app.run()

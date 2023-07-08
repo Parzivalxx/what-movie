@@ -5,10 +5,11 @@ services:
       context: ./what-movie-client
       dockerfile: Dockerfile
     volumes:
-      - '.:/app'
-      - '/app/node_modules'
+      - ./what-movie-client/src:/app/src
     ports:
       - 3000:3000
+    environment:
+      - WATCHPACK_POLLING=true
 
   backend:
     build:
@@ -28,7 +29,6 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - API_KEY=${API_KEY}
       - AUTHORIZATION=${AUTHORIZATION}
-      - ENVIRONMENT=${ENVIRONMENT}
     ports:
       - 5432:5432
     volumes:

@@ -1,21 +1,21 @@
-FROM node:16-alpine as builder
-# Set the working directory to /app inside the container
-WORKDIR /app
-# Copy app files
-COPY . .
-# Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
-RUN npm ci 
-# Build the app
-RUN npm run build
+# Base image for local development
+FROM node:14 as development
 
-# Bundle static assets with nginx
-FROM nginx:1.21.0-alpine as production
-ENV NODE_ENV production
-# Copy built assets from `builder` image
-COPY --from=builder /app/build /usr/share/nginx/html
-# Add your nginx.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-# Expose port
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
+
+# Install dependencies
+RUN npm install
+RUN npm i --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
+
+# Copy the entire application
+COPY . .
+
+# Expose port 3000 for development server
 EXPOSE 3000
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+
+# Start the development server
+CMD ["npm", "start"]

@@ -1,11 +1,9 @@
 import os
 
-environment = os.getenv("ENVIRONMENT", "dev")
 db_user = os.getenv("POSTGRES_USER")
 db_password = os.getenv("POSTGRES_PASSWORD")
 basedir = os.path.abspath(os.path.dirname(__file__))
-uri = "database" if environment == "prod" else "localhost"
-postgres_local_base = f"postgresql://{db_user}:{db_password}@{uri}/"
+postgres_local_base = f"postgresql://{db_user}:{db_password}@database/"
 database_name = os.getenv("POSTGRES_DB")
 
 
@@ -48,4 +46,4 @@ class ProductionConfig(BaseConfig):
 
     SECRET_KEY = "my_precious"
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = "postgresql:///example"
+    SQLALCHEMY_DATABASE_URI = os.getenv("PROD_DATABASE_URI")
