@@ -56,4 +56,9 @@ This web app allows users to browse movies now showing in or coming soon to cine
 
 ## Contributing
 
-Explain how others can contribute to your project. Include guidelines for submitting bug reports, feature requests, or pull requests.
+- Bug reports: If you encounter any bugs or issues, please [open a new issue](https://github.com/Parzivalxx/what-movie/issues) and provide detailed information about the problem.
+
+- Pull requests: If you want to contribute code to this project, you can submit a pull request. Follow these steps:
+  1. Fork the repository and create a new branch.
+  2. Make your changes and test them thoroughly.
+  3. Submit a pull request, providing a clear description of the changes you made.
