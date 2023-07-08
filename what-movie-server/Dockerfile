@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.7
+FROM python:3.11
 
 # Set working directory
 WORKDIR /app
@@ -13,8 +13,8 @@ COPY pyproject.toml poetry.lock ./
 ENV PATH="${PATH}:/root/.local/bin"
 
 # Install project dependencies
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-root --no-interaction --no-ansi
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-root --no-interaction --no-ansi
 
 # Copy application files
 COPY . .

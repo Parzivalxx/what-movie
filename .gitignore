@@ -5,7 +5,9 @@ node_modules
 # server
 **pycache**
 */tmp
-*.env
 
 # database
 pgdata
+
+# common
+*.env

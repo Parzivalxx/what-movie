@@ -9,7 +9,6 @@ COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm install
-RUN npm i --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
 
 # Copy the entire application
 COPY . .
