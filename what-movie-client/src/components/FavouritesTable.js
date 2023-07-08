@@ -26,7 +26,7 @@ const FavouritesTable = ({ favourites, onDelete }) => {
       "November",
       "December",
     ];
-    return `${day} ${months[month - 1]} ${year}`;
+    return `${day} ${months[month]} ${year}`;
   };
 
   return (
